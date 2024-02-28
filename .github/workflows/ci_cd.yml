@@ -1,0 +1,61 @@
+name: CI/CD
+
+on:
+  # Push on main excluding tags
+  push:
+    branches:
+      - 'main'
+    tags-ignore:
+      - '*.*'
+
+jobs:
+
+  build:
+    name: CI/CD
+    runs-on: macos-latest
+
+    steps:
+
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pods cache
+        uses: actions/cache@v4
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Setup Cocoapods based on Podfile.lock
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          podfile-path: GenericApp/Podfile.lock
+
+      - name: CocoaPod Install
+        run: pod install --project-directory=./GenericApp
+
+      - name: Build ORLib
+        run: xcodebuild -workspace ORLib/ORLib.xcodeproj/project.xcworkspace -scheme ORLib -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12'
+
+      - name: Build GenericApp
+        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12'
+
+      - name: Test ORLib
+        run: xcodebuild -workspace ORLib/ORLib.xcodeproj/project.xcworkspace -scheme GenericApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' test
+
+      - name: Test GenericApp
+        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' test
+
+      - name: Upload IPAs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipas
+          path: |
+            **/*.ipa
