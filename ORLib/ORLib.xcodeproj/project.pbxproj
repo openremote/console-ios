@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		321D41E7A29ED29205BD441C /* Pods_ORLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 850D0E4EC689CD46245628A2 /* Pods_ORLib.framework */; };
+		4C2496172BA886BF00423E36 /* ORLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C537EE1299D3BA0006EFB94 /* ORLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C3F82392B7A7AC9004ED480 /* OrOfflineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F82382B7A7AC9004ED480 /* OrOfflineViewController.swift */; };
 		4C3F823B2B7AA24A004ED480 /* UIViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F823A2B7AA24A004ED480 /* UIViewController+Utils.swift */; };
 		4C4A309A2B824F500096BBA8 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A30992B824F500096BBA8 /* ViewControllerFactory.swift */; };
 		4CB5495F2B7A19F700AED1A5 /* ConnectivityChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB5495E2B7A19F700AED1A5 /* ConnectivityChecker.swift */; };
-		4CBDF2AD2AE285E400C7D94C /* ORLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBDF2AC2AE285E400C7D94C /* ORLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CBDF2BD2AE2869D00C7D94C /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF5D05227143F1F00D705BE /* StorageProvider.swift */; };
 		4CBDF2BE2AE2869D00C7D94C /* GeofenceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF5D05327143F1F00D705BE /* GeofenceProvider.swift */; };
 		4CBDF2BF2AE2869D00C7D94C /* PushNotificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF5D05427143F1F00D705BE /* PushNotificationProvider.swift */; };
@@ -73,7 +72,6 @@
 		4C649E6929C2554F00FFBEA4 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/System/Library/Frameworks/CoreBluetooth.framework; sourceTree = DEVELOPER_DIR; };
 		4CB5495E2B7A19F700AED1A5 /* ConnectivityChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityChecker.swift; sourceTree = "<group>"; };
 		4CBDF2AA2AE285E400C7D94C /* ORLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ORLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4CBDF2AC2AE285E400C7D94C /* ORLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ORLib.h; sourceTree = "<group>"; };
 		4CC64C3E27C3CDD400A2FA4C /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		4CDE11DF2B286275005A4170 /* WKWebView+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebView+Utils.swift"; sourceTree = "<group>"; };
 		4CF5D04A27143EEC00D705BE /* ORLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORLib.swift; sourceTree = "<group>"; };
@@ -92,7 +90,6 @@
 		4CF5D06527143F1F00D705BE /* ORPushNotificationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ORPushNotificationAction.swift; sourceTree = "<group>"; };
 		4CF5D06727143F1F00D705BE /* ORNotificationResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ORNotificationResource.swift; sourceTree = "<group>"; };
 		4CF5D06827143F1F00D705BE /* HttpApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpApiManager.swift; sourceTree = "<group>"; };
-		6D810B7A4C47B5174F44A8CE /* Pods-ORLib.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ORLib.debug.xcconfig"; path = "../../../../../console/iOS/K2/Pods/Target Support Files/Pods-ORLib/Pods-ORLib.debug.xcconfig"; sourceTree = "<group>"; };
 		850D0E4EC689CD46245628A2 /* Pods_ORLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ORLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		914F7D4329215D3500655A22 /* test12.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test12.json; sourceTree = "<group>"; };
 		9156512928FC6D6700062E16 /* test9.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test9.json; sourceTree = "<group>"; };
@@ -118,7 +115,6 @@
 		91DD9FED2910280900912F79 /* test10.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test10.json; sourceTree = "<group>"; };
 		91DD9FEF29102A8B00912F79 /* test11.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test11.json; sourceTree = "<group>"; };
 		91DF424D299FA79600DFF85E /* test13.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test13.json; sourceTree = "<group>"; };
-		F756B4974BD868B38AAE7D31 /* Pods-ORLib.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ORLib.release.xcconfig"; path = "../../../../../console/iOS/K2/Pods/Target Support Files/Pods-ORLib/Pods-ORLib.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,7 +122,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				321D41E7A29ED29205BD441C /* Pods_ORLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,24 +135,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4CBDF2AB2AE285E400C7D94C /* ORLib */ = {
-			isa = PBXGroup;
-			children = (
-				4CBDF2AC2AE285E400C7D94C /* ORLib.h */,
-			);
-			path = ORLib;
-			sourceTree = "<group>";
-		};
 		4CF5D03E27143EEB00D705BE = {
 			isa = PBXGroup;
 			children = (
+				4C537EE1299D3BA0006EFB94 /* ORLib.h */,
 				4CC64C3E27C3CDD400A2FA4C /* Media.xcassets */,
 				4CF5D04927143EEC00D705BE /* ORLib */,
 				91A9A8F128BF6A3300DF8928 /* Tests */,
-				4CBDF2AB2AE285E400C7D94C /* ORLib */,
 				4CF5D04827143EEC00D705BE /* Products */,
 				717C35290053DAF6024CFEA7 /* Frameworks */,
-				CE88590B0599667DB0A16FEE /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -180,7 +166,6 @@
 				4CF5D05527143F1F00D705BE /* UI */,
 				4CF5D05B27143F1F00D705BE /* Utils */,
 				4CF5D04A27143EEC00D705BE /* ORLib.swift */,
-				4C537EE1299D3BA0006EFB94 /* ORLib.h */,
 				91A9A8FC28BF6A9900DF8928 /* ConfigManager.swift */,
 			);
 			path = ORLib;
@@ -291,16 +276,6 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		CE88590B0599667DB0A16FEE /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6D810B7A4C47B5174F44A8CE /* Pods-ORLib.debug.xcconfig */,
-				F756B4974BD868B38AAE7D31 /* Pods-ORLib.release.xcconfig */,
-			);
-			name = Pods;
-			path = ../GenericApp/Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -308,7 +283,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CBDF2AD2AE285E400C7D94C /* ORLib.h in Headers */,
+				4C2496172BA886BF00423E36 /* ORLib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,7 +474,6 @@
 /* Begin XCBuildConfiguration section */
 		4CBDF2AE2AE285E400C7D94C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D810B7A4C47B5174F44A8CE /* Pods-ORLib.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -541,7 +515,6 @@
 		};
 		4CBDF2AF2AE285E400C7D94C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F756B4974BD868B38AAE7D31 /* Pods-ORLib.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
