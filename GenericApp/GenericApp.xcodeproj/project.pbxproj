@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4CBDF2B62AE2862500C7D94C /* ORLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBDF2B52AE2862500C7D94C /* ORLib.framework */; };
-		4CBDF2BA2AE2862A00C7D94C /* ORLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBDF2B92AE2862A00C7D94C /* ORLib.framework */; };
-		4CBDF2BB2AE2862A00C7D94C /* ORLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBDF2B92AE2862A00C7D94C /* ORLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4CEDA25D25405B1E00C47E3B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CEDA25C25405B1E00C47E3B /* GoogleService-Info.plist */; };
 		4CEDA2A7254074D100C47E3B /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CEDA2A6254074D100C47E3B /* Storyboard.storyboard */; };
 		4CEDA2CE254075D400C47E3B /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEDA2CD254075D400C47E3B /* SplashViewController.swift */; };
@@ -40,17 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4CBDF2BC2AE2862A00C7D94C /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4CBDF2BB2AE2862A00C7D94C /* ORLib.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		878D2D2C249A498900011484 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -102,7 +88,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				756FA8BF24545CB0CC18CA6E /* Pods_GenericApp.framework in Frameworks */,
-				4CBDF2BA2AE2862A00C7D94C /* ORLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +96,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5952998DA2B50AFF73DDCAE1 /* Pods_NotificationService.framework in Frameworks */,
-				4CBDF2B62AE2862500C7D94C /* ORLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +214,6 @@
 				878D2D07249A490300011484 /* Resources */,
 				878D2D2C249A498900011484 /* Embed App Extensions */,
 				1916A4B7304981F2A7B97168 /* [CP] Embed Pods Frameworks */,
-				4CBDF2BC2AE2862A00C7D94C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

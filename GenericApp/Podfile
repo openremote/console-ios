@@ -3,15 +3,11 @@ platform :ios, '14.0'
 
 use_frameworks!
 
-def shared_pods
-  pod 'MaterialComponents/TextFields'
-  pod 'MaterialComponents/Buttons'
-end
+pod 'ORLib', :path => '../ORLib'
 
 
 target 'GenericApp' do
   project 'GenericApp'
-  shared_pods
   pod 'Firebase/Messaging'
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Analytics'
@@ -21,15 +17,9 @@ end
 
 target 'NotificationService' do
   project 'GenericApp'
-  shared_pods
   pod 'Firebase/Messaging'
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Analytics'
-end
-
-target 'ORLib' do
-  shared_pods
-  project '../ORLib/ORLib'
 end
 
 post_install do |installer|
