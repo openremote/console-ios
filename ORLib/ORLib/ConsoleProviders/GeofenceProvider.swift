@@ -25,7 +25,6 @@ public class GeofenceProvider: NSObject, URLSessionDelegate {
     public override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         self.baseURL = userdefaults?.string(forKey: GeofenceProvider.baseUrlKey) ?? ""
