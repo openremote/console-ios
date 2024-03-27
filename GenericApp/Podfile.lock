@@ -169,6 +169,9 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - ORLib (0.1.0):
+    - MaterialComponents/Buttons (~> 124.2.0)
+    - MaterialComponents/TextFields (~> 124.2.0)
   - PromisesObjC (2.0.0)
 
 DEPENDENCIES:
@@ -177,8 +180,7 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Messaging
   - IQKeyboardManagerSwift
-  - MaterialComponents/Buttons
-  - MaterialComponents/TextFields
+  - ORLib (from `../ORLib`)
 
 SPEC REPOS:
   trunk:
@@ -200,6 +202,10 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
 
+EXTERNAL SOURCES:
+  ORLib:
+    :path: "../ORLib"
+
 SPEC CHECKSUMS:
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
@@ -217,8 +223,9 @@ SPEC CHECKSUMS:
   MDFInternationalization: d697c55307816222a55685c4ccb1044ffb030c12
   MDFTextAccessibility: f4bb4cc2194286651b59a215fdeaa0e05dc90ba5
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  ORLib: 39e89dccbe850c081cda12ce2333764e3399dd37
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
 
-PODFILE CHECKSUM: ce3e35c0d35c3cddf8cb7fbafdb7026472107994
+PODFILE CHECKSUM: 932a0ffa33f49e2ffb77a3afa0fc25b781a0a808
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.15.2

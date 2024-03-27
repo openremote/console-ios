@@ -17,9 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, URLSessionDelegate {
 
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
-    var reachabilityAlert : UIAlertController?
-    var reachabilityAlertShown = false
-    let internetReachability = Reachability()
 
     var geofenceProvider : GeofenceProvider?
     var fcmToken: String?
@@ -61,17 +58,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, URLSessionDelegate {
         } else {
             FirebaseApp.configure()
             Messaging.messaging().delegate = self
-
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.reachabilityChanged(note:)),
-                                                   name: NSNotification.Name.reachabilityChanged,
-                                                   object: internetReachability)
-            do {
-                try internetReachability?.startNotifier()
-                self.updateReachabilityStatus(reachability: internetReachability!)
-            } catch {
-                NSLog("%@", "Unable to start notifier")
-            }
         }
         return true
     }
@@ -86,50 +72,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, URLSessionDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-        reachabilityAlert?.dismiss(animated: true, completion: nil)
-        reachabilityAlertShown = false
-        internetReachability?.stopNotifier()
+        
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        reachabilityAlert?.dismiss(animated: true, completion: nil)
-        reachabilityAlertShown = false
-        internetReachability?.stopNotifier()
+       
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            do {
-                try self.internetReachability?.startNotifier()
-                self.updateReachabilityStatus(reachability: self.internetReachability!)
-            } catch {
-                NSLog("%@", "Unable to start notifier")
-            }
-        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            do {
-                try self.internetReachability?.startNotifier()
-                self.updateReachabilityStatus(reachability: self.internetReachability!)
-            } catch {
-                NSLog("%@", "Unable to start notifier")
-            }
-        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        reachabilityAlert?.dismiss(animated: true, completion: nil)
-        reachabilityAlertShown = false
-        internetReachability?.stopNotifier()
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -170,44 +126,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, URLSessionDelegate {
         completionHandler(UIBackgroundFetchResult.newData)
     }
 
-    @objc  func reachabilityChanged(note: NSNotification) {
-        if let reachability = note.object as? Reachability {
-            updateReachabilityStatus(reachability: reachability)
-        }
-    }
-
-    private func updateReachabilityStatus(reachability: Reachability) {
-        if reachability.connection == .none {
-            if (!reachabilityAlertShown) {
-                let topWindow = UIWindow(frame: UIScreen.main.bounds)
-                topWindow.rootViewController = UIViewController()
-                topWindow.windowLevel = UIWindow.Level.alert + 1
-
-                reachabilityAlert = UIAlertController(title: "Network Error", message: "Your device seems to be offline", preferredStyle: .alert)
-                let reachabilityRetryAction = UIAlertAction(title: "Retry", style: .default, handler: { (action) in
-                    self.reachabilityAlertShown = false
-                    self.updateReachabilityStatus(reachability: self.internetReachability!)
-                    topWindow.isHidden = true
-                })
-                let reachabilityCancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-                    self.reachabilityAlertShown = false
-                    self.reachabilityAlert?.dismiss(animated: true, completion: nil)
-                    topWindow.isHidden = true
-                })
-                reachabilityAlert?.addAction(reachabilityRetryAction)
-                reachabilityAlert?.addAction(reachabilityCancelAction)
-                topWindow.makeKeyAndVisible()
-                topWindow.rootViewController?.present(reachabilityAlert!, animated: true, completion: nil)
-                reachabilityAlertShown = true
-            }
-        } else {
-            if (reachabilityAlertShown) {
-                reachabilityAlert?.dismiss(animated: true, completion: nil)
-                reachabilityAlertShown = false
-            }
-        }
-    }
-
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
             completionHandler(.performDefaultHandling, nil)
@@ -228,7 +146,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             ORNotificationResource.sharedInstance.notificationDelivered(notificationId: notiId, targetId: consoleId)
         }
 
-        completionHandler([.alert, .sound])
+        completionHandler([.banner, .sound])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

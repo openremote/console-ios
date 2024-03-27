@@ -1,0 +1,24 @@
+name: Push CocoaPod on Tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  push_pod:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7 # Adjust as needed for your project
+    - name: Install CocoaPods
+      run: gem install cocoapods
+    - name: Validate Podspec
+      run: pod lib lint
+    - name: Push to CocoaPods Trunk
+      run: pod trunk push ORLib.podspec --allow-warnings
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
