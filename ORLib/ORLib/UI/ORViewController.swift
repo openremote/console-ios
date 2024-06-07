@@ -96,6 +96,13 @@ open class ORViewcontroller : UIViewController {
     }
     
     func configureAccess() {
+        if let currentWebView = myWebView {
+            currentWebView.removeFromSuperview()
+        }
+        if let currentWebProgressBar = webProgressBar {
+            currentWebProgressBar.removeFromSuperview()
+        }
+        
         let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
         let userController:WKUserContentController = WKUserContentController()
         
@@ -138,6 +145,16 @@ open class ORViewcontroller : UIViewController {
         webProgressBar?.trailingAnchor.constraint(equalTo: myWebView!.trailingAnchor).isActive = true
         webProgressBar?.topAnchor.constraint(equalTo: myWebView!.topAnchor, constant: -2).isActive = true
         webProgressBar?.heightAnchor.constraint(equalToConstant: 2).isActive = true
+    }
+    
+    func clearWebBackForwardList() {
+        if let webView = myWebView {
+            if let currentUrl = webView.url {
+                // the backForwardList of WKWebView is readonly, so need to create a new webview and set the currentUrl
+                configureAccess()
+                loadURL(url: currentUrl)
+            }
+        }
     }
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -365,6 +382,9 @@ extension ORViewcontroller: WKScriptMessageHandler {
                         }
                     }
                 }
+            case "CLEAR_WEB_HISTORY":
+                clearWebBackForwardList()
+                break
             default:
                 print("Unknown message type: \(type )")
             }
