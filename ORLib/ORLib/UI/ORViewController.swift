@@ -108,8 +108,12 @@ open class ORViewcontroller : UIViewController {
         
         userController.add(self, name: "int")
         
-        let exec_template : String? = ""
-        let userScript:WKUserScript = WKUserScript(source: exec_template!, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        let disable_zoom_script  = "var meta = document.createElement('meta');" +
+        "meta.name = 'viewport';" +
+        "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+        "var head = document.getElementsByTagName('head')[0];" +
+        "head.appendChild(meta);"
+        let userScript:WKUserScript = WKUserScript(source: disable_zoom_script, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         userController.addUserScript(userScript)
         
         webCfg.userContentController = userController;
@@ -493,7 +497,7 @@ extension ORViewcontroller: WKNavigationDelegate {
     
     func reloadWebView() {
         var url = self.myWebView?.url
-            
+        
         if url?.absoluteString == "about:blank" || url == nil {
             url = URL(string: baseUrl!)
         }
