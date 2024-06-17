@@ -149,10 +149,12 @@ open class ORViewcontroller : UIViewController {
     
     func clearWebBackForwardList() {
         if let webView = myWebView {
-            if let currentUrl = webView.url {
-                // the backForwardList of WKWebView is readonly, so need to create a new webview and set the currentUrl
-                configureAccess()
-                loadURL(url: currentUrl)
+            if webView.backForwardList.backList.count > 1 { //Check if there's more than one item before the current page in order to prevent an endless loop
+                if let currentUrl = webView.url {
+                    // the backForwardList of WKWebView is readonly, so need to create a new webview and set the currentUrl
+                    configureAccess()
+                    loadURL(url: currentUrl)
+                }
             }
         }
     }
