@@ -96,6 +96,23 @@ public class BleProvider: NSObject {
         }
     }
     
+    public func disconnectFromDevice(callback:@escaping ([String: Any]) -> (Void)) {
+        if let connectedDevice = self.connectedDevice {
+            centralManager?.cancelPeripheralConnection(connectedDevice)
+            callback([
+                DefaultsKey.actionKey : Actions.disconnectFromBleDevice,
+                DefaultsKey.providerKey : Providers.ble,
+                DefaultsKey.successKey : true
+            ])
+        } else {
+            callback([
+                DefaultsKey.actionKey : Actions.disconnectFromBleDevice,
+                DefaultsKey.providerKey : Providers.ble,
+                DefaultsKey.successKey : false
+            ])
+        }
+    }
+    
     public func sendToDevice(attributeId: String, value: Data, callback:@escaping ([String: Any]) -> (Void)) {
         if let device = self.connectedDevice {
             sendToDeviceCallback = callback

@@ -63,6 +63,7 @@ public enum Actions {
     public static let scanResult = "SCAN_RESULT"
     public static let scanBleDevices = "SCAN_BLE_DEVICES"
     public static let connectToBleDevice = "CONNECT_TO_DEVICE"
+    public static let disconnectFromBleDevice = "DISCONNECT_FROM_DEVICE"
     public static let sendToBleDevice = "SEND_TO_DEVICE"
 }
 

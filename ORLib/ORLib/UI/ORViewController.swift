@@ -82,7 +82,6 @@ open class ORViewcontroller : UIViewController {
             options: []) {
             if let theJSONText = String(data: theJSONData,
                                         encoding: .utf8) {
-                print("notifyClient with message: \(theJSONText)")
                 let returnMessage = "OpenRemoteConsole._handleProviderResponse('\(theJSONText)')"
                 DispatchQueue.main.async {
                     self.myWebView?.evaluateJavaScript("\(returnMessage)", completionHandler: { (any, error) in
@@ -364,6 +363,10 @@ extension ORViewcontroller: WKScriptMessageHandler {
                                         bleProvider?.connectoToDevice(deviceId: deviceId) { connectData in
                                             self.sendData(data: connectData)
                                         }
+                                    }
+                                case Actions.disconnectFromBleDevice:
+                                    bleProvider?.disconnectFromDevice() {disconnectData in
+                                        self.sendData(data: disconnectData)
                                     }
                                 case Actions.sendToBleDevice:
                                     if let attributeId = postMessageDict["attributeId"] as? String, let value = postMessageDict["value"] {
