@@ -37,7 +37,7 @@ open class ORViewcontroller : UIViewController {
     var connectivityChecker: ConnectivityChecker?
     public var geofenceProvider: GeofenceProvider?
     public var pushProvider: PushNotificationProvider?
-    public var storageProvider: StorageProvider?
+    public var storageProvider = StorageProvider()
     public var qrProvider: QrScannerProvider?
     public var bleProvider: BleProvider?
     
@@ -221,7 +221,6 @@ open class ORViewcontroller : UIViewController {
 
 extension ORViewcontroller: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("Received WebApp message \(message.body)")
         let jsonDictionnary = message.body as? [String : Any]
         if let type = jsonDictionnary?["type"] as? String {
             switch (type) {
@@ -282,26 +281,23 @@ extension ORViewcontroller: WKScriptMessageHandler {
                             case Providers.storage:
                                 switch(action) {
                                 case Actions.providerInit:
-                                    storageProvider = StorageProvider()
-                                    let initializeData = storageProvider!.initialize()
+                                    let initializeData = storageProvider.initialize()
                                     sendData(data: initializeData)
                                 case Actions.providerEnable:
-                                    if let enableData = storageProvider?.enable() {
-                                        sendData(data: enableData)
-                                    }
+                                    let enableData = storageProvider.enable()
+                                    sendData(data: enableData)
+                                    
                                 case Actions.providerDisable:
-                                    if let disableData = storageProvider?.disable() {
-                                        sendData(data: disableData)
-                                    }
+                                    let disableData = storageProvider.disable()
+                                    sendData(data: disableData)
                                 case Actions.store:
                                     if let key = postMessageDict["key"] as? String {
-                                        storageProvider?.store(key: key, data: postMessageDict["value"] as? String)
+                                        storageProvider.store(key: key, data: postMessageDict["value"] as? String)
                                     }
                                 case Actions.retrieve:
                                     if let key = postMessageDict["key"] as? String {
-                                        if let retrieveData = storageProvider?.retrieve(key: key) {
-                                            sendData(data: retrieveData)
-                                        }
+                                        let retrieveData = storageProvider.retrieve(key: key)
+                                        sendData(data: retrieveData)
                                     }
                                 default:
                                     print("Wrong action \(action) for \(provider)")

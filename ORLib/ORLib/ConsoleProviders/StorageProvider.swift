@@ -41,12 +41,12 @@ public class StorageProvider: NSObject {
         userdefaults?.synchronize()
     }
 
-    public func retrieve(key: String) -> [String: Any] {
+    public func retrieve(key: String) -> [String: Any?] {
         return [
             DefaultsKey.actionKey: Actions.retrieve,
             DefaultsKey.providerKey: Providers.storage,
             "key": key,
-            "value": userdefaults?.string(forKey:key) ?? "null"
+            "value": userdefaults?.string(forKey:key) ?? nil
         ]
     }
 
