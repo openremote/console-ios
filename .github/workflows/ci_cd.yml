@@ -41,10 +41,10 @@ jobs:
         run: pod install --project-directory=./GenericApp
 
       - name: Build GenericApp
-        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12'
+        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -allowProvisioningUpdates
 
       - name: Test GenericApp
-        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' test
+        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' test -allowProvisioningUpdates
 
       - name: Upload IPAs
         if: success()
