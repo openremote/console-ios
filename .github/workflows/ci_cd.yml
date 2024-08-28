@@ -70,13 +70,7 @@ jobs:
       - name: CocoaPod Install
         run: pod install --project-directory=./GenericApp
 
-      - name: Build GenericApp
-        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -allowProvisioningUpdates
-
-      - name: Test GenericApp
-        run: xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme GenericApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' test -allowProvisioningUpdates
-
-      - name: build archive
+      - name: Build Archive
         run: |
           xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme "GenericApp" \
           -archivePath $RUNNER_TEMP/genericapp.xcarchive \
@@ -85,7 +79,7 @@ jobs:
           -destination generic/platform=iOS \
           clean archive          
 
-      - name: export ipa
+      - name: EXPORT IPA
         env:
           EXPORT_OPTIONS_PLIST: ${{ secrets.APPLE_EXPORT_OPTIONS_PLIST }}
         run: |
