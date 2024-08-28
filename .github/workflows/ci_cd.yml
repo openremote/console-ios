@@ -76,14 +76,14 @@ jobs:
 
       - name: Build Archive
         run: |
-          xcodebuild -workspace GenericApp/GenericApp.xcodeproj/project.xcworkspace -scheme "GenericApp" \
+          xcodebuild -workspace GenericApp/GenericApp.xcworkspace -scheme "GenericApp" \
           -archivePath $RUNNER_TEMP/genericapp.xcarchive \
           -sdk iphoneos \
           -configuration Release \
           -destination generic/platform=iOS \
           clean archive          
 
-      - name: EXPORT IPA
+      - name: Export IPA
         env:
           EXPORT_OPTIONS_PLIST: ${{ secrets.APPLE_EXPORT_OPTIONS_PLIST }}
         run: |
