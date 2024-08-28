@@ -28,6 +28,11 @@ post_install do |installer|
       target.build_configurations.each do |config|
           config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
        end
+       if target.name == 'ORLib'
+        target.build_configurations.each do |config|
+          config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+        end
+      end
     end
   end
 end
