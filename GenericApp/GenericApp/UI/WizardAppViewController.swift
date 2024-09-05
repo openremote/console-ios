@@ -20,7 +20,7 @@ class WizardAppViewController: UIViewController {
     var appName: String?
 
     @IBOutlet weak var appTextInput: ORTextInput!
-    @IBOutlet weak var nextButton: MDCRaisedButton!
+    @IBOutlet weak var nextButton: ORRaisedButton!
     @IBOutlet weak var boxView: UIView!
     
     @IBOutlet weak var appsSelectionButton: UIButton!
@@ -40,10 +40,10 @@ class WizardAppViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        appTextInput.textField?.delegate = self
-        appTextInput.textField?.autocorrectionType = .no
-        appTextInput.textField?.autocapitalizationType = .none
-        appTextInput.textField?.returnKeyType = .next
+        appTextInput.textFieldDelegate = self
+        appTextInput.textField.autocorrectionType = .no
+        appTextInput.textField.autocapitalizationType = .none
+        appTextInput.textField.returnKeyType = .next
         
         if let apps = apps {
             dropDown.anchorView = appsSelectionButton
@@ -123,7 +123,7 @@ extension WizardAppViewController: UITextFieldDelegate {
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == appTextInput.textField {
-            if let s = appTextInput.textField?.text {
+            if let s = appTextInput.textField.text {
                 appName = s.replacingCharacters(in: Range(range, in: s)!, with: string).trimmingCharacters(in: .whitespacesAndNewlines)
             }
         }
@@ -136,7 +136,7 @@ extension WizardAppViewController: UITextFieldDelegate {
         }
 
         if textField == appTextInput.textField {
-            appTextInput.textField?.resignFirstResponder()
+            appTextInput.textField.resignFirstResponder()
             selectApp()
         }
 
