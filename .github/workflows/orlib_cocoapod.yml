@@ -7,17 +7,23 @@ on:
 
 jobs:
   push_pod:
-    runs-on: macOS-latest
+    runs-on: macos-latest
+    
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby environment
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7 # Adjust as needed for your project
+        ruby-version: '3.0'  # Make sure this version matches your project's Ruby version
+
     - name: Install CocoaPods
       run: gem install cocoapods
+
     - name: Validate Podspec
       run: pod lib lint
+
     - name: Push to CocoaPods Trunk
       run: pod trunk push ORLib.podspec --allow-warnings
       env:
