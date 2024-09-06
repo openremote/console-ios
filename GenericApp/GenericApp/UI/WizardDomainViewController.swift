@@ -17,7 +17,7 @@ class WizardDomainViewController: UIViewController {
     var domainName: String?
 
     @IBOutlet weak var domainTextInput: ORTextInput!
-    @IBOutlet weak var nextButton: MDCRaisedButton!
+    @IBOutlet weak var nextButton: ORRaisedButton!
     @IBOutlet var boxView: UIView!
     
     override func viewDidLoad() {
@@ -33,10 +33,10 @@ class WizardDomainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        domainTextInput.textField?.delegate = self
-        domainTextInput.textField?.autocorrectionType = .no
-        domainTextInput.textField?.autocapitalizationType = .none
-        domainTextInput.textField?.returnKeyType = .next
+        domainTextInput.textFieldDelegate = self
+        domainTextInput.textField.autocorrectionType = .no
+        domainTextInput.textField.autocapitalizationType = .none
+        domainTextInput.textField.returnKeyType = .next
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -81,7 +81,7 @@ extension WizardDomainViewController: UITextFieldDelegate {
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == domainTextInput.textField {
-            if let s = domainTextInput.textField?.text {
+            if let s = domainTextInput.textField.text {
                 domainName = s.replacingCharacters(in: Range(range, in: s)!, with: string).trimmingCharacters(in: .whitespacesAndNewlines)
                 nextButton.isEnabled = !(domainName?.isEmpty ?? true)
             } else {
@@ -128,7 +128,7 @@ extension WizardDomainViewController: UITextFieldDelegate {
         }
 
         if textField == domainTextInput.textField, let domain = domainName {
-            domainTextInput.textField?.resignFirstResponder()
+            domainTextInput.textField.resignFirstResponder()
             requestAppConfig(domain)
         }
 

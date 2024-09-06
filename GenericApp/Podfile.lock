@@ -125,73 +125,12 @@ PODS:
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - IQKeyboardManagerSwift (7.0.3)
-  - MaterialComponents/AnimationTiming (124.2.0)
-  - MaterialComponents/Availability (124.2.0)
-  - MaterialComponents/Buttons (124.2.0):
-    - MaterialComponents/Elevation
-    - MaterialComponents/Ink
-    - MaterialComponents/private/Math
-    - MaterialComponents/Ripple
-    - MaterialComponents/Shadow
-    - MaterialComponents/ShadowElevations
-    - MaterialComponents/ShadowLayer
-    - MaterialComponents/ShapeLibrary
-    - MaterialComponents/Shapes
-    - MaterialComponents/Typography
-    - MDFInternationalization
-    - MDFTextAccessibility
-  - MaterialComponents/Elevation (124.2.0):
-    - MaterialComponents/Availability
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-  - MaterialComponents/Ink (124.2.0):
-    - MaterialComponents/Availability
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-  - MaterialComponents/Palettes (124.2.0)
-  - MaterialComponents/private/Application (124.2.0)
-  - MaterialComponents/private/Color (124.2.0):
-    - MaterialComponents/Availability
-  - MaterialComponents/private/Math (124.2.0)
-  - MaterialComponents/Ripple (124.2.0):
-    - MaterialComponents/AnimationTiming
-    - MaterialComponents/Availability
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-  - MaterialComponents/Shadow (124.2.0):
-    - MaterialComponents/Availability
-  - MaterialComponents/ShadowElevations (124.2.0)
-  - MaterialComponents/ShadowLayer (124.2.0):
-    - MaterialComponents/ShadowElevations
-  - MaterialComponents/ShapeLibrary (124.2.0):
-    - MaterialComponents/private/Math
-    - MaterialComponents/Shapes
-  - MaterialComponents/Shapes (124.2.0):
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-    - MaterialComponents/ShadowLayer
-  - MaterialComponents/TextFields (124.2.0):
-    - MaterialComponents/AnimationTiming
-    - MaterialComponents/Buttons
-    - MaterialComponents/Elevation
-    - MaterialComponents/Palettes
-    - MaterialComponents/private/Math
-    - MaterialComponents/Typography
-    - MDFInternationalization
-  - MaterialComponents/Typography (124.2.0):
-    - MaterialComponents/private/Application
-    - MaterialComponents/private/Math
-    - MDFTextAccessibility
-  - MDFInternationalization (3.0.0)
-  - MDFTextAccessibility (2.0.1)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - ORLib (0.1.0):
-    - MaterialComponents/Buttons (~> 124.2.0)
-    - MaterialComponents/TextFields (~> 124.2.0)
+  - ORLib (0.2.0)
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
@@ -221,9 +160,6 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - IQKeyboardManagerSwift
-    - MaterialComponents
-    - MDFInternationalization
-    - MDFTextAccessibility
     - nanopb
     - PromisesObjC
     - PromisesSwift
@@ -248,14 +184,11 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   IQKeyboardManagerSwift: f9c5dc36cba16ddd2e51fa7d51c34a2e083029b5
-  MaterialComponents: 1a9b2d9d45b1601ae544de85089adc4c464306d4
-  MDFInternationalization: d697c55307816222a55685c4ccb1044ffb030c12
-  MDFTextAccessibility: f4bb4cc2194286651b59a215fdeaa0e05dc90ba5
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  ORLib: 39e89dccbe850c081cda12ce2333764e3399dd37
+  ORLib: b2d18006a71a8a4f0e4957193539b11eb4f0215e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
 
-PODFILE CHECKSUM: 932a0ffa33f49e2ffb77a3afa0fc25b781a0a808
+PODFILE CHECKSUM: 72218c7641fe3fcc271a203adb92316625f296b7
 
 COCOAPODS: 1.15.2

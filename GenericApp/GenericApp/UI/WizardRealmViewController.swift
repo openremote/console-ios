@@ -21,7 +21,7 @@ class WizardRealmViewController: UIViewController {
     var realmName: String?
     
     @IBOutlet weak var realmTextInput: ORTextInput!
-    @IBOutlet weak var nextButton: MDCRaisedButton!
+    @IBOutlet weak var nextButton: ORRaisedButton!
     @IBOutlet weak var boxView: UIView!
     
     @IBOutlet weak var realmsSelectionButton: UIButton!
@@ -41,10 +41,10 @@ class WizardRealmViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        realmTextInput.textField?.delegate = self
-        realmTextInput.textField?.autocorrectionType = .no
-        realmTextInput.textField?.autocapitalizationType = .none
-        realmTextInput.textField?.returnKeyType = .next
+        realmTextInput.textFieldDelegate = self
+        realmTextInput.textField.autocorrectionType = .no
+        realmTextInput.textField.autocapitalizationType = .none
+        realmTextInput.textField.returnKeyType = .next
         
         if let realms = realms {
             dropDown.anchorView = realmsSelectionButton
@@ -136,7 +136,7 @@ extension WizardRealmViewController: UITextFieldDelegate {
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == realmTextInput.textField {
-            if let s = realmTextInput.textField?.text {
+            if let s = realmTextInput.textField.text {
                 realmName = s.replacingCharacters(in: Range(range, in: s)!, with: string).trimmingCharacters(in: .whitespacesAndNewlines)
             }
         }
@@ -178,7 +178,7 @@ extension WizardRealmViewController: UITextFieldDelegate {
         }
 
         if textField == realmTextInput.textField, let realm = realmName {
-            realmTextInput.textField?.resignFirstResponder()
+            realmTextInput.textField.resignFirstResponder()
 //            requestAppConfig(domain)
         }
 

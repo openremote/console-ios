@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F7300E07018F1569E489D0D /* libPods-ORLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FFC050F14EC2F1B52AFD7F /* libPods-ORLib.a */; };
 		4C2496172BA886BF00423E36 /* ORLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C537EE1299D3BA0006EFB94 /* ORLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C3F82392B7A7AC9004ED480 /* OrOfflineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F82382B7A7AC9004ED480 /* OrOfflineViewController.swift */; };
 		4C3F823B2B7AA24A004ED480 /* UIViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F823A2B7AA24A004ED480 /* UIViewController+Utils.swift */; };
@@ -115,6 +116,9 @@
 		91DD9FED2910280900912F79 /* test10.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test10.json; sourceTree = "<group>"; };
 		91DD9FEF29102A8B00912F79 /* test11.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test11.json; sourceTree = "<group>"; };
 		91DF424D299FA79600DFF85E /* test13.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test13.json; sourceTree = "<group>"; };
+		A9FFC050F14EC2F1B52AFD7F /* libPods-ORLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ORLib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4928160DE603785066E4F96 /* Pods-ORLib.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ORLib.debug.xcconfig"; path = "Target Support Files/Pods-ORLib/Pods-ORLib.debug.xcconfig"; sourceTree = "<group>"; };
+		ECEEE3E7AE7DBFFF66A1A1F2 /* Pods-ORLib.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ORLib.release.xcconfig"; path = "Target Support Files/Pods-ORLib/Pods-ORLib.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F7300E07018F1569E489D0D /* libPods-ORLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +149,7 @@
 				91A9A8F128BF6A3300DF8928 /* Tests */,
 				4CF5D04827143EEC00D705BE /* Products */,
 				717C35290053DAF6024CFEA7 /* Frameworks */,
+				6F418CBDB99C4050C941B36A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -234,11 +240,22 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		6F418CBDB99C4050C941B36A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B4928160DE603785066E4F96 /* Pods-ORLib.debug.xcconfig */,
+				ECEEE3E7AE7DBFFF66A1A1F2 /* Pods-ORLib.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		717C35290053DAF6024CFEA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				4C649E6929C2554F00FFBEA4 /* CoreBluetooth.framework */,
 				850D0E4EC689CD46245628A2 /* Pods_ORLib.framework */,
+				A9FFC050F14EC2F1B52AFD7F /* libPods-ORLib.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -474,6 +491,7 @@
 /* Begin XCBuildConfiguration section */
 		4CBDF2AE2AE285E400C7D94C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4928160DE603785066E4F96 /* Pods-ORLib.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -515,6 +533,7 @@
 		};
 		4CBDF2AF2AE285E400C7D94C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ECEEE3E7AE7DBFFF66A1A1F2 /* Pods-ORLib.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
