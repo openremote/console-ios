@@ -114,7 +114,7 @@ public class BleProvider: NSObject {
     }
     
     public func sendToDevice(attributeId: String, value: Data, callback:@escaping ([String: Any]) -> (Void)) {
-        if let device = self.connectedDevice {
+        if self.connectedDevice != nil {
             sendToDeviceCallback = callback
             if let characteristic = deviceCharacteristics.first(where: {$0.uuid.uuidString == attributeId}) {
                 self.maxDataLength = self.connectedDevice!.maximumWriteValueLength(for: characteristic.properties.contains(.writeWithoutResponse) ? .withoutResponse : .withResponse)
@@ -258,7 +258,7 @@ extension BleProvider: CBPeripheralDelegate {
     }
     
     public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        if let err = error {
+        if error != nil {
             sendToDeviceCallback?([DefaultsKey.actionKey: "SEND_TO_DEVICE", DefaultsKey.providerKey: "ble", DefaultsKey.successKey: false])
         } else {
             if let data = dataToSend {
