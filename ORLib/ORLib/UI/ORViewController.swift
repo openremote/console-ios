@@ -113,11 +113,15 @@ open class ORViewcontroller : UIViewController {
         
         webCfg.userContentController = userController;
         let sbHeight: CGFloat
-        if #available(iOS 11.0, *) {
-            sbHeight = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIApplication.shared.statusBarFrame.height
+
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            // Use the statusBarManager's frame if available
+            sbHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 0
         } else {
-            sbHeight = UIApplication.shared.statusBarFrame.height
+            // Fallback in case there's no window scene (this case is rare in iOS 13+ apps)
+            sbHeight = 0
         }
+
         
         webCfg.allowsInlineMediaPlayback = true
         let webFrame = CGRect(x: 0, y: sbHeight, width: view.frame.size.width, height: view.frame.size.height - sbHeight)

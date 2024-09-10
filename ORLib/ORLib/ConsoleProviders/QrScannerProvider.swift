@@ -60,7 +60,7 @@ public class QrScannerProvider: NSObject {
         }
     }
     
-    public func enable(callback:@escaping ([String: Any]) ->(Void)) {
+    public func enable(callback:@escaping ([String: Any?]) ->(Void)) {
         userdefaults?.removeObject(forKey: QrScannerProvider.cameraDisabledKey)
         userdefaults?.synchronize()
         let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
