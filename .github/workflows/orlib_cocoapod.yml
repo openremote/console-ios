@@ -24,7 +24,7 @@ jobs:
     - name: Run Unit Tests with xcodebuild
       run: |
           xcodebuild test \
-            -project ORLib.xcodeproj \
+            -project ./ORLib/ORLib.xcodeproj \
             -scheme Tests \
             -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
 
