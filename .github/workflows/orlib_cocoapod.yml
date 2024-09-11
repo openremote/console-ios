@@ -25,6 +25,6 @@ jobs:
       run: pod lib lint ./ORLib/ORLib.podspec
 
     - name: Push to CocoaPods Trunk
-      run: pod trunk push ./ORLib/ORLib.podspec --allow-warnings --skip-tests
+      run: pod trunk push ./ORLib/ORLib.podspec --allow-warnings
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
