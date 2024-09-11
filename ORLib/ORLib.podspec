@@ -16,6 +16,6 @@ Pod::Spec.new do |spec|
   # Define test targets
   spec.test_spec do |test_spec|
     test_spec.source_files = 'Tests/**/*.swift'
-    test_spec.dependency 'XCTest'
+    test_spec.resources = ['Tests/Fixtures/**/*']
   end
 end

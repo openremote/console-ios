@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3F7300E07018F1569E489D0D /* libPods-ORLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9FFC050F14EC2F1B52AFD7F /* libPods-ORLib.a */; };
 		4C2496172BA886BF00423E36 /* ORLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C537EE1299D3BA0006EFB94 /* ORLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C3F82392B7A7AC9004ED480 /* OrOfflineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F82382B7A7AC9004ED480 /* OrOfflineViewController.swift */; };
 		4C3F823B2B7AA24A004ED480 /* UIViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F823A2B7AA24A004ED480 /* UIViewController+Utils.swift */; };
@@ -41,6 +40,8 @@
 		4CBDF2D72AE286DF00C7D94C /* Media.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 4CC64C3E27C3CDD400A2FA4C /* Media.xcassets */; };
 		4CBDF2D82AE286E200C7D94C /* ORLib.h in Sources */ = {isa = PBXBuildFile; fileRef = 4C537EE1299D3BA0006EFB94 /* ORLib.h */; };
 		4CDE11E02B286275005A4170 /* WKWebView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDE11DF2B286275005A4170 /* WKWebView+Utils.swift */; };
+		4CFEC51C2C919AF300DCC936 /* ORLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBDF2AA2AE285E400C7D94C /* ORLib.framework */; };
+		4CFEC51D2C919AF300DCC936 /* ORLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBDF2AA2AE285E400C7D94C /* ORLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		914F7D4429215D3500655A22 /* test12.json in Resources */ = {isa = PBXBuildFile; fileRef = 914F7D4329215D3500655A22 /* test12.json */; };
 		9156512A28FC6D6700062E16 /* test9.json in Resources */ = {isa = PBXBuildFile; fileRef = 9156512928FC6D6700062E16 /* test9.json */; };
 		91932F9328C66A3C00BABBA3 /* test1.json in Resources */ = {isa = PBXBuildFile; fileRef = 91932F9228C66A3C00BABBA3 /* test1.json */; };
@@ -59,6 +60,30 @@
 		91DD9FF029102A8B00912F79 /* test11.json in Resources */ = {isa = PBXBuildFile; fileRef = 91DD9FEF29102A8B00912F79 /* test11.json */; };
 		91DF424E299FA79600DFF85E /* test13.json in Resources */ = {isa = PBXBuildFile; fileRef = 91DF424D299FA79600DFF85E /* test13.json */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4CFEC51E2C919AF300DCC936 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4CF5D03F27143EEC00D705BE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4CBDF2A92AE285E400C7D94C;
+			remoteInfo = ORLib;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4CFEC5202C919AF300DCC936 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4CFEC51D2C919AF300DCC936 /* ORLib.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4C0E4A0F274BDCE0008CB352 /* ScannerOverlayPreviewLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerOverlayPreviewLayer.swift; sourceTree = "<group>"; };
@@ -91,7 +116,6 @@
 		4CF5D06527143F1F00D705BE /* ORPushNotificationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ORPushNotificationAction.swift; sourceTree = "<group>"; };
 		4CF5D06727143F1F00D705BE /* ORNotificationResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ORNotificationResource.swift; sourceTree = "<group>"; };
 		4CF5D06827143F1F00D705BE /* HttpApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpApiManager.swift; sourceTree = "<group>"; };
-		850D0E4EC689CD46245628A2 /* Pods_ORLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ORLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		914F7D4329215D3500655A22 /* test12.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test12.json; sourceTree = "<group>"; };
 		9156512928FC6D6700062E16 /* test9.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test9.json; sourceTree = "<group>"; };
 		91658F9028897E55000FF05C /* ORConsoleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORConsoleConfig.swift; sourceTree = "<group>"; };
@@ -116,9 +140,6 @@
 		91DD9FED2910280900912F79 /* test10.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test10.json; sourceTree = "<group>"; };
 		91DD9FEF29102A8B00912F79 /* test11.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test11.json; sourceTree = "<group>"; };
 		91DF424D299FA79600DFF85E /* test13.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test13.json; sourceTree = "<group>"; };
-		A9FFC050F14EC2F1B52AFD7F /* libPods-ORLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ORLib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B4928160DE603785066E4F96 /* Pods-ORLib.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ORLib.debug.xcconfig"; path = "Target Support Files/Pods-ORLib/Pods-ORLib.debug.xcconfig"; sourceTree = "<group>"; };
-		ECEEE3E7AE7DBFFF66A1A1F2 /* Pods-ORLib.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ORLib.release.xcconfig"; path = "Target Support Files/Pods-ORLib/Pods-ORLib.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,7 +147,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F7300E07018F1569E489D0D /* libPods-ORLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CFEC51C2C919AF300DCC936 /* ORLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,7 +170,6 @@
 				91A9A8F128BF6A3300DF8928 /* Tests */,
 				4CF5D04827143EEC00D705BE /* Products */,
 				717C35290053DAF6024CFEA7 /* Frameworks */,
-				6F418CBDB99C4050C941B36A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -240,22 +260,10 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		6F418CBDB99C4050C941B36A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B4928160DE603785066E4F96 /* Pods-ORLib.debug.xcconfig */,
-				ECEEE3E7AE7DBFFF66A1A1F2 /* Pods-ORLib.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		717C35290053DAF6024CFEA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				4C649E6929C2554F00FFBEA4 /* CoreBluetooth.framework */,
-				850D0E4EC689CD46245628A2 /* Pods_ORLib.framework */,
-				A9FFC050F14EC2F1B52AFD7F /* libPods-ORLib.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -311,7 +319,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4CBDF2B02AE285E400C7D94C /* Build configuration list for PBXNativeTarget "ORLib" */;
 			buildPhases = (
-				822E907AABDEA9DF9A849F71 /* [CP] Check Pods Manifest.lock */,
 				4CBDF2A52AE285E400C7D94C /* Headers */,
 				4CBDF2A62AE285E400C7D94C /* Sources */,
 				4CBDF2A72AE285E400C7D94C /* Frameworks */,
@@ -333,10 +340,12 @@
 				91A9A8EC28BF6A3300DF8928 /* Sources */,
 				91A9A8ED28BF6A3300DF8928 /* Frameworks */,
 				91A9A8EE28BF6A3300DF8928 /* Resources */,
+				4CFEC5202C919AF300DCC936 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4CFEC51F2C919AF300DCC936 /* PBXTargetDependency */,
 			);
 			name = Tests;
 			productName = Tests;
@@ -351,7 +360,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					4CBDF2A92AE285E400C7D94C = {
 						CreatedOnToolsVersion = 15.0;
@@ -410,31 +419,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		822E907AABDEA9DF9A849F71 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ORLib-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		4CBDF2A62AE285E400C7D94C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -488,10 +472,17 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4CFEC51F2C919AF300DCC936 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4CBDF2A92AE285E400C7D94C /* ORLib */;
+			targetProxy = 4CFEC51E2C919AF300DCC936 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		4CBDF2AE2AE285E400C7D94C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B4928160DE603785066E4F96 /* Pods-ORLib.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -533,7 +524,6 @@
 		};
 		4CBDF2AF2AE285E400C7D94C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ECEEE3E7AE7DBFFF66A1A1F2 /* Pods-ORLib.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -576,6 +566,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -638,6 +629,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -698,12 +690,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4AC88KZHJZ;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				HEADER_SEARCH_PATHS = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.openremote.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -716,12 +710,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4AC88KZHJZ;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				HEADER_SEARCH_PATHS = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.openremote.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
