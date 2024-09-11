@@ -3,7 +3,8 @@ Pod::Spec.new do |spec|
   spec.version      = "0.2.0"
   spec.summary      = "Library for OpenRemote iOS applications."
   spec.homepage     = "https://github.com/openremote/console-ios"
-  spec.license      = { :type => 'AGPL-3.0', :file => './ORLib/LICENSE.txt' }
+  spec.license      = { :type => 'AGPL-3.0', :file => 'LICENSE.txt' }
+  spec.resources    = ['LICENSE.txt']
 
   spec.author       = { "OpenRemote" => "developers@openremote.io" }
   spec.platform     = :ios, "14.0"
@@ -11,4 +12,10 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :git => "https://github.com/openremote/console-ios.git", :tag => "#{spec.version}" }
   spec.source_files = 'ORLib/**/*.swift'
+
+  # Define test targets
+  spec.test_spec do |test_spec|
+    test_spec.source_files = 'Tests/**/*.swift'
+    test_spec.dependency 'XCTest'
+  end
 end
