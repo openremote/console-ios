@@ -11,4 +11,5 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :git => "https://github.com/openremote/console-ios.git", :tag => "#{spec.version}" }
   spec.source_files = 'ORLib/**/*.swift'
+  spec.frameworks = 'XCTest'
 end
