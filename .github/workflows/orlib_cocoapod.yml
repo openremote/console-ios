@@ -21,10 +21,17 @@ jobs:
     - name: Install CocoaPods
       run: gem install cocoapods
 
+    - name: Run Unit Tests with xcodebuild
+      run: |
+          xcodebuild test \
+            -project ORLib.xcodeproj \
+            -scheme Tests \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
+
     - name: Validate Podspec
-      run: pod lib lint ./ORLib/ORLib.podspec
+      run: pod lib lint ./ORLib/ORLib.podspec --skip-tests
 
     - name: Push to CocoaPods Trunk
-      run: pod trunk push ./ORLib/ORLib.podspec --allow-warnings
+      run: pod trunk push ./ORLib/ORLib.podspec --allow-warnings --skip-tests
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
