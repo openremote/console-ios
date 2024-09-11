@@ -22,9 +22,13 @@ jobs:
       run: gem install cocoapods
 
     - name: Validate Podspec
-      run: pod lib lint ./ORLib/ORLib.podspec
+      run: |
+        cd ORLib
+        pod lib lint ORLib.podspec
 
     - name: Push to CocoaPods Trunk
-      run: pod trunk push ./ORLib/ORLib.podspec --allow-warnings
+      run: |
+        cd ORLib
+        pod trunk push ORLib.podspec
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
