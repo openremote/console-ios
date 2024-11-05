@@ -131,6 +131,7 @@ open class ORViewcontroller : UIViewController {
         //add observer to get estimated progress value
         myWebView?.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil);
         myWebView?.allowsBackForwardNavigationGestures = true
+        myWebView?.scrollView.contentInsetAdjustmentBehavior = .never
         
         webProgressBar = UIProgressView(progressViewStyle: .bar)
         webProgressBar?.progressTintColor = UIColor(named: "or_green")
