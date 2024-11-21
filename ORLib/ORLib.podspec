@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
   spec.homepage      = "https://github.com/openremote/console-ios"
   spec.license       = { :type => 'AGPL-3.0' }
 
-  spec.author        = { "OpenRemote" => "developers@openremote.io" }
+  spec.author        = { "OpenRemote" => "developers@openremote.io", :file => 'LICENSE.txt' }
   spec.platform      = :ios, "14.0"
   spec.swift_version = '5.0'
 
