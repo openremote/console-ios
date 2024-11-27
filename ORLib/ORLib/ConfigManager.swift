@@ -86,8 +86,10 @@ public class ConfigManager {
                         let filteredApps = await filterPotentialApps(apiManager: api, potentialApps: apps)
                         if let fa = filteredApps, fa.count == 1, let appName = fa.first {
                             state = .selectRealm(baseUrl, appName, nil)
-                        } else {
+                        } else if let fa = filteredApps, fa.count > 1 {
                             state = .selectApp(baseUrl, filteredApps)
+                        } else {
+                            state = .selectRealm(baseUrl, "manager", nil )
                         }
                         
                     } catch ApiManagerError.communicationError(let httpStatusCode) {

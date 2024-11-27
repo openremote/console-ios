@@ -126,11 +126,6 @@ public class HttpApiManager: NSObject, ApiManager {
             session.dataTask(with: urlRequest, completionHandler: { responseData, response, error in
                 let httpStatusCode = (response as? HTTPURLResponse)?.statusCode ?? 500
 
-                if httpStatusCode == 404 {
-                    continuation.resume(throwing: ApiManagerError.notFound)
-                    return
-                }
-                
                 if httpStatusCode != 200 {
                     continuation.resume(throwing: ApiManagerError.communicationError(httpStatusCode))
                     return
@@ -160,11 +155,6 @@ public class HttpApiManager: NSObject, ApiManager {
         return try await withCheckedThrowingContinuation { continuation in
             session.dataTask(with: urlRequest, completionHandler: { responseData, response, error in
                 let httpStatusCode = (response as? HTTPURLResponse)?.statusCode ?? 500
-
-                if httpStatusCode == 404 {
-                    continuation.resume(throwing: ApiManagerError.notFound)
-                    return
-                }
                 
                 if httpStatusCode != 200 {
                     continuation.resume(throwing: ApiManagerError.communicationError(httpStatusCode))
