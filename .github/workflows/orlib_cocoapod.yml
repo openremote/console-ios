@@ -5,6 +5,9 @@ on:
     tags:
       - '*'
 
+  # Manual trigger
+  workflow_dispatch:
+
 jobs:
   push_pod:
     runs-on: macos-latest

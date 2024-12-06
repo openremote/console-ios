@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+
+  build:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get ORLib spec information
+        id: orlib_spec
+        run: |
+          echo "version=$(cat ORLib/ORLib.podspec | sed 's# ##g' | grep 'spec.version=' | cut -d'=' -f2 | sed 's#"##g')" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        run: |
+          git tag $ORLIB_VERSION
+          git push origin tag $ORLIB_VERSION
+          gh workflow run orlib_cocoapod.yml --ref $ORLIB_VERSION
+          gh release create $ORLIB_VERSION --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORLIB_VERSION: ${{ steps.orlib_spec.outputs.version }}
