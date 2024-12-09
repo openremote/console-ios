@@ -1,20 +1,17 @@
 changelog:
   categories:
-    - title: ⚠️ Security issues
+    - title: 🎉 New features
       labels:
-        - security
+        - Feature
     - title: ⭐ Enhancements
       labels:
-        - enhancement
+        - Enhancement
     - title: 🐞 Bug fixes
       labels:
-        - bug
-    - title: 🔨 Dependency upgrades
-      labels:
-        - dependencies
+        - Bug
     - title: 📝 Documentation
       labels:
-        - documentation
+        - Documentation
     - title: Other changes
       labels:
         - "*"
