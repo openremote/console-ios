@@ -11,7 +11,7 @@ target 'GenericApp' do
   pod 'Firebase/Messaging'
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Analytics'
-  pod 'IQKeyboardManagerSwift'
+  pod 'IQKeyboardManagerSwift', '~>7.0'
   pod 'DropDown'
 end
 
@@ -26,9 +26,14 @@ post_install do |installer|
   installer.generated_projects.each do |project|
     project.targets.each do |target|
       target.build_configurations.each do |config|
-          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
-       end
-       if target.name == 'ORLib'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      end
+      if target.name == 'ORLib'
+        target.build_configurations.each do |config|
+          config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+        end
+      end
+      if target.name == 'ESPProvision'
         target.build_configurations.each do |config|
           config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
         end

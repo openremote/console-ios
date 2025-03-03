@@ -65,6 +65,13 @@ public enum Actions {
     public static let connectToBleDevice = "CONNECT_TO_DEVICE"
     public static let disconnectFromBleDevice = "DISCONNECT_FROM_DEVICE"
     public static let sendToBleDevice = "SEND_TO_DEVICE"
+    public static let startBleScan = "START_BLE_SCAN"
+    public static let stopBleScan = "STOP_BLE_SCAN"
+    public static let connectToDevice = "CONNECT_TO_DEVICE"
+    public static let startWifiScan = "START_WIFI_SCAN"
+    public static let stopWifiScan = "STOP_WIFI_SCAN"
+    public static let sendWifiConfiguration = "SEND_WIFI_CONFIGURATION"
+    public static let provisionDevice = "PROVISION_DEVICE"
 }
 
 public enum Providers {
@@ -73,6 +80,7 @@ public enum Providers {
     public static let storage = "storage"
     public static let qr = "qr"
     public static let ble = "ble"
+    public static let espprovision = "espprovision"
 }
 
 public enum NotificationsNames {
