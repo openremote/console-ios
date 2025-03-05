@@ -389,6 +389,9 @@ extension ORViewcontroller: WKScriptMessageHandler {
                                 switch(action) {
                                 case Actions.providerInit:
                                     espProvisionProvider = ESPProvisionProvider()
+                                    espProvisionProvider?.sendDataCallback = { [weak self] data in
+                                        self?.sendData(data: data)
+                                    }
                                     self.sendData(data: espProvisionProvider!.initialize())
                                 case Actions.providerEnable:
                                     espProvisionProvider?.enable(callback: { enableData in
