@@ -56,13 +56,10 @@ public class ConfigManager {
                     if let apps = cc.apps {
                         globalAppInfos = apps
                     }
+                } catch ApiManagerError.notFound, ApiManagerError.communicationError(let httpStatusCode) where httpStatusCode == 404 || httpStatusCode == 403 { // 403 is for backwards compatibility of older manager
+                    cc = ORConsoleConfig()
                 } catch ApiManagerError.communicationError(let httpStatusCode) {
-                    if httpStatusCode == 404 || httpStatusCode == 403 {
-                        // 403 is for backwards compatibility of older manager
-                        cc = ORConsoleConfig()
-                    } else {
-                        throw ApiManagerError.communicationError(httpStatusCode)
-                    }
+                    throw ApiManagerError.communicationError(httpStatusCode)
                 }
                 
                 if let selectedApp = cc.app {
@@ -92,13 +89,11 @@ public class ConfigManager {
                             state = .selectRealm(baseUrl, "manager", nil )
                         }
                         
-                    } catch ApiManagerError.communicationError(let httpStatusCode) {
-                        if httpStatusCode == 404 || httpStatusCode == 403 {
-                            if cc.showRealmTextInput {
-                                state = .selectRealm(baseUrl, "manager", nil)
-                            } else {
-                                state = .complete(ProjectConfig(domain: baseUrl, app: "manager", realm: nil))
-                            }
+                    } catch ApiManagerError.notFound, ApiManagerError.communicationError(let httpStatusCode) where httpStatusCode == 404 || httpStatusCode == 403 { // 403 is for backwards compatibility of older manager
+                        if cc.showRealmTextInput {
+                            state = .selectRealm(baseUrl, "manager", nil)
+                        } else {
+                            state = .complete(ProjectConfig(domain: baseUrl, app: "manager", realm: nil))
                         }
                     }
                 } else {
