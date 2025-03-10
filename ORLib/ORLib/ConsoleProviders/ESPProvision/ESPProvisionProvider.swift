@@ -21,67 +21,34 @@
 import Foundation
 import CoreBluetooth
 import ESPProvision
+import os
 
-protocol ORESPProvisionManager {
-    func searchESPDevices(devicePrefix: String, transport: ESPTransport, security: ESPSecurity) async throws -> [ORESPDevice]
-
-    func stopESPDevicesSearch()
-}
-
-struct EspressifProvisionManager: ORESPProvisionManager {
-    var provisionManager: ESPProvisionManager = ESPProvisionManager.shared
-
-
-    // TODO: how can I protect against multiple potential callbacks and not call continuation multiple times ?
-    
-    public func searchESPDevices(devicePrefix: String, transport: ESPTransport, security: ESPSecurity = .secure) async throws -> [ORESPDevice] {
-        return try await withCheckedThrowingContinuation { continuation in
-            provisionManager.searchESPDevices(devicePrefix: devicePrefix, transport: transport, security: security) { deviceList, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume(returning: deviceList ?? [])
-                }
-            }
-        }
-    }
-
-    public func stopESPDevicesSearch() {
-        provisionManager.stopESPDevicesSearch()
-    }
-}
-
-
-// TODO: add logger
+typealias SendDataCallback = ([String: Any]) -> (Void)
 
 class ESPProvisionProvider: NSObject {
+    private static let logger = Logger(
+           subsystem: Bundle.main.bundleIdentifier!,
+           category: String(describing: ESPProvisionProvider.self)
+       )
     public static let espProvisionDisabledKey = "espProvisionDisabled"
 
     let userdefaults = UserDefaults(suiteName: DefaultsKey.groupEntitlement)
     let version = "beta"
 
-    typealias SendDataCallback = ([String: Any]) -> (Void)
 
-    private var provisionManager: ORESPProvisionManager?
 
-    private var prefix = "PROV_" // TODO: how should this be configured
-    private var username = "wifiprov"
-    private var pop = "abcd1234"
+    private var deviceRegistry = DeviceRegistry()
 
-    private var devices: [DiscoveredDevice] = []
-    private var devicesIndex: [UUID:DiscoveredDevice] = [:]
+    private var deviceConnection: DeviceConnection?
 
-    private var bleScanning = false
-    private var bleStatus = BLEStatus.disconnected
+    private var wifiProvisioner: WifiProvisioner?
 
-    // TODO: should this be reset on disconnect ?
-    private var deviceId: UUID?
-    private var device: ORESPDevice?
-
-    private var wifiScanning = false
-    private var wifiNetworks = [ESPWifiNetwork]()
-
-    var sendDataCallback: SendDataCallback?
+    var sendDataCallback: SendDataCallback? {
+        didSet {
+            deviceRegistry.sendDataCallback = sendDataCallback
+            deviceConnection?.sendDataCallback = sendDataCallback
+        }
+    }
 
     public override init() {
         super.init()
@@ -103,25 +70,25 @@ class ESPProvisionProvider: NSObject {
         ]
     }
 
-    public func enable(callback:@escaping ([String: Any]) -> (Void)) {
+    public func enable() -> [String: Any] {
+        deviceRegistry.enable()
+
         userdefaults?.removeObject(forKey: ESPProvisionProvider.espProvisionDisabledKey)
         userdefaults?.synchronize()
-        provisionManager = EspressifProvisionManager(provisionManager: ESPProvisionManager.shared)
-        callback([
+
+        return [
             DefaultsKey.actionKey: Actions.providerEnable,
             DefaultsKey.providerKey: Providers.espprovision,
             DefaultsKey.hasPermissionKey: CBCentralManager.authorization == .allowedAlways,
             DefaultsKey.successKey: true
-        ])
+        ]
     }
 
     public func disable() -> [String: Any] {
-        if bleScanning {
-            provisionManager?.stopESPDevicesSearch()
-        }
-        provisionManager = nil
+        deviceRegistry.disable()
 
-        // TODO: should we disconnect ?
+        disconnectFromDevice()
+        // This eventually calls ESPBLEDelegate.peripheralDisconnected that sets device, deviceId and configChannel to nil
 
         userdefaults?.set(true, forKey: ESPProvisionProvider.espProvisionDisabledKey)
         userdefaults?.synchronize()
@@ -133,112 +100,44 @@ class ESPProvisionProvider: NSObject {
 
     // MARK: Device scan
 
-    public func startDevicesScan() {
-        bleScanning = true
-        devices = []
-        devicesScan()
+    public func startDevicesScan(prefix: String? = nil) {
+        deviceRegistry.startDevicesScan(prefix: prefix)
     }
 
     public func stopDevicesScan() {
-        bleScanning = false
-        provisionManager?.stopESPDevicesSearch()
-    }
-
-    private func devicesScan() {
-        if let provisionManager {
-            Task {
-                do {
-                    let deviceList = try await provisionManager.searchESPDevices(devicePrefix:prefix, transport:.ble, security:.secure)
-
-                    for device in deviceList {
-
-                        // We need to assign an id to each device, so web app can refer to it
-                        // TODO: but we consider name unique anyway and filter duplicates, so is id really useful ?
-                        if self.devices.first(where: { $0.device.name == device.name }) == nil {
-                            let dev = DiscoveredDevice(device: device)
-                            self.devices.append(dev)
-                            self.devicesIndex[dev.id] = dev
-                        }
-                    }
-                    // If there are devices in the list, we communicated to web app
-                    // TODO: we could optimize and check if changes since the last time
-                    if !self.devices.isEmpty {
-                        self.sendDataCallback?([
-                            DefaultsKey.actionKey: Actions.startBleScan,
-                            DefaultsKey.providerKey: Providers.espprovision,
-                            DefaultsKey.dataKey: ["devices": self.devices.map { $0.info }] // TODO: check format that's output
-                        ])
-                        //Provider sent us ["data": ["devices": [["name": "PROV_335440", "id": "8ECEAD18-FAB8-49B0-B30D-930CA7B938B5"]]], "action": "START_BLE_SCAN", "provider": "espprovision"]
-                        // TODO: is this the expected format or do we expect JSON ?
-
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                    // The only error applicable to us here is espDeviceNotFound, we don't care about it
-                }
-
-                // Until app tells us to stop scanning, we repeat
-                if self.bleScanning {
-                    self.devicesScan()
-                }
-            }
-        }
+        deviceRegistry.stopDevicesScan()
     }
 
     // MARK: Device connect/disconnect
 
-    public func connectTo(deviceId idToConnectTo: String) {
-        //TODO: what's the message to be sent here, a reply to connect or a general connection status message ?
-
-//        BLE - connected is received sooner
-//        "Connection status connected" call back from connect call arrives later
-
-// For disconnection,
-
-
-
-        if self.bleScanning {
-            stopDevicesScan()
+    public func connectTo(deviceId idToConnectTo: String, pop: String? = nil, username: String? = nil) {
+        if deviceConnection == nil {
+            deviceConnection = DeviceConnection(deviceRegistry: deviceRegistry, sendDataCallback: sendDataCallback)
         }
-        if let devId = UUID(uuidString: idToConnectTo), let dev = devicesIndex[devId] {
-            device = dev.device
-            deviceId = devId
-            device!.bleDelegate = self
-            device!.connect(delegate: self) { status in
-                print("Connection status \(status)")
-                switch status {
-                case .connected:
-                    self.bleStatus = .connected
-                    self.sendConnectToDeviceStatus(status: "connected")
-                    break
-                case .failedToConnect(let error):
-                    self.bleStatus = .disconnected
-                    self.bleScanning = false
-                    self.sendConnectToDeviceStatus(status: "connectionError", error: error.localizedDescription)
-                case .disconnected:
-                    self.bleStatus = .disconnected
-                    self.bleScanning = false
-                    self.sendConnectToDeviceStatus(status: "disconnected")
-                    break
-                }
-            }
-        }
+        deviceConnection!.connectTo(deviceId: idToConnectTo, pop: pop, username: username)
     }
 
     public func disconnectFromDevice() {
-        if let device {
-            device.disconnect()
-        }
+        wifiProvisioner?.stopWifiScan()
+        deviceConnection?.disconnectFromDevice()
     }
 
-    private func sendConnectToDeviceStatus(status: String, error: String? = nil) {
-        var data: [String: Any] = ["id": deviceId?.uuidString ?? "N/A", "status": status]
-        if let error {
-            data["error"] = error
+    public func exitProvisioning() {
+        guard deviceConnection?.isConnected ?? false else {
+            sendExitProvisioningError(.notConnected, errorMessage: "No connection established to device")
+            return
+        }
+        deviceConnection!.exitProvisioning()
+    }
+
+    func sendExitProvisioningError(_ error: ESPProviderError, errorMessage: String?) {
+        var data: [String: Any] = ["errorCode": error.rawValue]
+        if let errorMessage {
+            data["errorMessage"] = errorMessage
         }
         self.sendDataCallback?([
-            DefaultsKey.actionKey: Actions.connectToDevice,
             DefaultsKey.providerKey: Providers.espprovision,
+            DefaultsKey.actionKey: Actions.exitProvisioning,
             DefaultsKey.dataKey: data
         ])
     }
@@ -246,137 +145,56 @@ class ESPProvisionProvider: NSObject {
     // MARK: Wifi scan
 
     public func startWifiScan() {
-        wifiScanning = true
-        scanWifi()
+        if wifiProvisioner == nil {
+            wifiProvisioner = WifiProvisioner(deviceConnection: deviceConnection, sendDataCallback: sendDataCallback)
+        }
+        wifiProvisioner!.startWifiScan()
     }
 
     public func stopWifiScan() {
-        wifiScanning = false
-    }
-
-    private func scanWifi() {
-        device?.scanWifiList { wifiList, error in
-            if let wifiList {
-                for network in wifiList {
-                    if self.wifiNetworks.first(where: { $0.ssid == network.ssid }) == nil {
-                        self.wifiNetworks.append(network)
-                    }
-                }
-                if !self.wifiNetworks.isEmpty && self.wifiScanning {
-                    self.sendDataCallback?([
-                        DefaultsKey.actionKey: Actions.startWifiScan,
-                        DefaultsKey.providerKey: Providers.espprovision,
-                        DefaultsKey.dataKey: ["networks": self.wifiNetworks
-                            .map { ["ssid": $0.ssid, "signalStrength": $0.rssi] } ]
-                        ])
-                }
-            } else {
-                // TODO: what to do with this error ?
-                // ESPWiFiScanError
-                // It could be list is empty but also a real error, in later case, should be communicated to web app
-                print(error)
-            }
-            if self.wifiScanning {
-                self.scanWifi()
-            }
-        }
+        wifiProvisioner?.stopWifiScan()
     }
 
     public func sendWifiConfiguration(ssid: String, password: String) {
-        wifiScanning = false
-        device?.provision(ssid: ssid, passPhrase: password, threadOperationalDataset: nil) { status in
-            print("provision callback with status \(status)")
-            // This block gets called multiple times
-            // provision callback with status configApplied
-            // then
-            // provision callback with status failure(ESPProvision.ESPProvisionError.wifiStatusAuthenticationError)
-            // or
-            // provision callback with status success
-            switch status {
-            case .success:
-                self.sendWifiConfigurationStatus(connected: true)
-            case .failure(let error):
-                self.sendWifiConfigurationStatus(connected: false, error: error.localizedDescription)
-            case .configApplied:
-                // This is an intermediate information we're not interested in forwarding
-                break
-            }
-        }
+        wifiProvisioner?.sendWifiConfiguration(ssid: ssid, password: password)
     }
 
-    private func sendWifiConfigurationStatus(connected: Bool, error: String? = nil) {
-        var data: [String: Any] = ["connected": connected]
-        if let error {
-            data["error"] = error
-        }
-        self.sendDataCallback?([
-            DefaultsKey.actionKey: Actions.sendWifiConfiguration,
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.dataKey: data
-        ])
-    }
+    // MARK: OR Configuration
+
+
 }
 
-
-extension ESPProvisionProvider: ESPBLEDelegate {
-    func peripheralConnected() {
-        bleStatus = .connected
-    }
-
-    func peripheralDisconnected(peripheral: CBPeripheral, error: Error?) {
-        bleStatus = .disconnected
-        // Careful about deviceId being reset or not at this stage
-        self.sendConnectToDeviceStatus(status: "disconnected")
-    }
-
-    func peripheralFailedToConnect(peripheral: CBPeripheral?, error: Error?) {
-        bleStatus = .disconnected
-    }
-}
-
-extension ESPProvisionProvider: ESPDeviceConnectionDelegate {
-    func getProofOfPossesion(forDevice: ESPDevice, completionHandler: @escaping (String) -> Void) {
-        print("Asked for PoP")
-        completionHandler(self.pop)
-    }
-
-    func getUsername(forDevice: ESPDevice, completionHandler: @escaping (String?) -> Void) {
-        print("Asked for username")
-        completionHandler(self.username)
-    }
-}
-
-private enum BLEStatus {
-    case connecting
-    case connected
-    case disconnected
-}
-
-private struct DiscoveredDevice: Hashable, Equatable {
-    var id = UUID()
-    var device: ORESPDevice
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(device.name)
-    }
-
-    static func ==(lhs: DiscoveredDevice, rhs: DiscoveredDevice) -> Bool {
-        lhs.device.name == rhs.device.name
-    }
-
-    var info: [String: Any] {
-        [
-            "id": id.uuidString,
-            "name": device.name
-        ]
-    }
-}
 
 #if DEBUG
 // TODO: see https://stackoverflow.com/a/60267724 for improvement
 extension ESPProvisionProvider {
     func setProvisionManager(_ provisionManager: ORESPProvisionManager) {
-        self.provisionManager = provisionManager
+        self.deviceRegistry.provisionManager = provisionManager
     }
 }
 #endif
+
+public enum ESPProviderError: Int {
+    case unknownDevice = 100
+
+    case bleCommunicationError = 200
+
+    case notConnected = 300
+    case communicationError = 301
+
+    case securityError = 400
+
+    case wifiConfigurationError = 500
+    case wifiCommunicationError = 501
+    case wifiAuthenticationError = 502
+    case wifiNetworkNotFound = 503
+
+
+    case genericError = 10000
+}
+
+public enum ESPProviderConnectToDeviceStatus {
+    public static let connected = "connected"
+    public static let disconnected = "disconnected"
+    public static let connectionError = "connectionError"
+}

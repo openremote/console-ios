@@ -72,6 +72,7 @@ public enum Actions {
     public static let stopWifiScan = "STOP_WIFI_SCAN"
     public static let sendWifiConfiguration = "SEND_WIFI_CONFIGURATION"
     public static let provisionDevice = "PROVISION_DEVICE"
+    public static let exitProvisioning = "EXIT_PROVISIONING"
 }
 
 public enum Providers {

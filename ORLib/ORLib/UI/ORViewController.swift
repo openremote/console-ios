@@ -394,20 +394,20 @@ extension ORViewcontroller: WKScriptMessageHandler {
                                     }
                                     self.sendData(data: espProvisionProvider!.initialize())
                                 case Actions.providerEnable:
-                                    espProvisionProvider?.enable(callback: { enableData in
-                                        self.sendData(data: enableData)
-                                    })
+                                    if let enableData = espProvisionProvider?.enable() {
+                                        sendData(data: enableData)
+                                    }
                                 case Actions.providerDisable:
                                     if let disableData = espProvisionProvider?.disable() {
                                         sendData(data: disableData)
                                     }
                                 case Actions.startBleScan:
-                                    espProvisionProvider?.startDevicesScan()
+                                    espProvisionProvider?.startDevicesScan(prefix: postMessageDict["prefix"] as? String)
                                 case Actions.stopBleScan:
                                     espProvisionProvider?.stopDevicesScan()
                                 case Actions.connectToBleDevice:
                                     if let deviceId = postMessageDict["id"] as? String {
-                                        espProvisionProvider?.connectTo(deviceId: deviceId)
+                                        espProvisionProvider?.connectTo(deviceId: deviceId, pop: postMessageDict["pop"] as? String)
                                     }
                                 case Actions.disconnectFromBleDevice:
                                     espProvisionProvider?.disconnectFromDevice()
@@ -420,6 +420,8 @@ extension ORViewcontroller: WKScriptMessageHandler {
                                        let password = postMessageDict["password"] as? String {
                                         espProvisionProvider?.sendWifiConfiguration(ssid: ssid, password: password)
                                     }
+                                case Actions.exitProvisioning:
+                                    espProvisionProvider?.exitProvisioning()
                                 case Actions.provisionDevice:
                                     print("TODO")
                                 default:
