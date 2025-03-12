@@ -76,7 +76,7 @@ jobs:
 
       - name: Build Archive
         run: |
-          xcodebuild -workspace GenericApp/GenericApp.xcworkspace -scheme "GenericApp" \
+          xcodebuild -project GenericApp/GenericApp.xcodeproj -scheme "GenericApp" \
           -archivePath $RUNNER_TEMP/genericapp.xcarchive \
           -sdk iphoneos \
           -configuration Release \
