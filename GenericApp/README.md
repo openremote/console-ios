@@ -23,8 +23,7 @@ This project uses Swift Package Manager for all dependencies:
 
 1. Clone the repository
 2. Open the `GenericApp.xcodeproj` file in Xcode
-3. Add the required Swift Packages (see SPM_INTEGRATION.md for details)
-4. Build and run the project
+3. Build and run the project
 
 ## App Flow
 
