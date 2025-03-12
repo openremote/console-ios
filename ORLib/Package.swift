@@ -19,7 +19,6 @@ let package = Package(
             name: "ORLib",
             dependencies: [],
             path: "ORLib",
-            exclude: ["Info.plist"],
             resources: [
                 .process("Media.xcassets")
             ]
