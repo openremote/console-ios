@@ -280,16 +280,6 @@ public class HttpApiManager: NSObject, ApiManager {
         session.uploadTask(with: urlRequest, from: data, completionHandler:  { responseData, response, error in
             let httpStatusCode = (response as? HTTPURLResponse)?.statusCode ?? 500
 
-            if httpStatusCode == 404 {
-                    continuation.resume(throwing: ApiManagerError.notFound)
-                    return
-                }
-               
-            if httpStatusCode != 200 {
-                continuation.resume(throwing: ApiManagerError.communicationError(httpStatusCode))
-                return
-            }
-
             guard let responseData = responseData else {
                 callback?(httpStatusCode, nil, error);
                 return

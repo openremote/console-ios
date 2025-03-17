@@ -56,7 +56,9 @@ public class ConfigManager {
                     if let apps = cc.apps {
                         globalAppInfos = apps
                     }
-                } catch ApiManagerError.notFound, ApiManagerError.communicationError(let httpStatusCode) where httpStatusCode == 404 || httpStatusCode == 403 { // 403 is for backwards compatibility of older manager
+                } catch ApiManagerError.notFound {
+                    cc = ORConsoleConfig()
+                } catch ApiManagerError.communicationError(let httpStatusCode) where httpStatusCode == 404 || httpStatusCode == 403 { // 403 is for backwards compatibility of older manager
                     cc = ORConsoleConfig()
                 } catch ApiManagerError.communicationError(let httpStatusCode) {
                     throw ApiManagerError.communicationError(httpStatusCode)
@@ -89,7 +91,13 @@ public class ConfigManager {
                             state = .selectRealm(baseUrl, "manager", nil )
                         }
                         
-                    } catch ApiManagerError.notFound, ApiManagerError.communicationError(let httpStatusCode) where httpStatusCode == 404 || httpStatusCode == 403 { // 403 is for backwards compatibility of older manager
+                    } catch ApiManagerError.notFound {
+                        if cc.showRealmTextInput {
+                            state = .selectRealm(baseUrl, "manager", nil)
+                        } else {
+                            state = .complete(ProjectConfig(domain: baseUrl, app: "manager", realm: nil))
+                        }
+                    } catch ApiManagerError.communicationError(let httpStatusCode) where httpStatusCode == 404 || httpStatusCode == 403 { // 403 is for backwards compatibility of older manager
                         if cc.showRealmTextInput {
                             state = .selectRealm(baseUrl, "manager", nil)
                         } else {
