@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, URLSessionDelegate {
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "or_green") as Any]
         UIBarButtonItem.appearance().tintColor = UIColor(named: "or_green")
         
-        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.isEnabled = true
 
         UNUserNotificationCenter.current().delegate = self
         // if the app was launched because of geofencing

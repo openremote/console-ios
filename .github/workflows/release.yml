@@ -30,7 +30,6 @@ jobs:
         run: |
           git tag $ORLIB_VERSION
           git push origin tag $ORLIB_VERSION
-          gh workflow run orlib_cocoapod.yml --ref $ORLIB_VERSION
           gh release create $ORLIB_VERSION --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}

@@ -58,25 +58,17 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
           cp $NOTIDICATION_SERVICE_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Pods cache
+      - name: Swift Package Manager cache
         uses: actions/cache@v4
         with:
-          path: Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-pods-
-
-      - name: Setup Cocoapods based on Podfile.lock
-        uses: maxim-lobanov/setup-cocoapods@v1
-        with:
-          podfile-path: GenericApp/Podfile.lock
-
-      - name: CocoaPod Install
-        run: pod install --project-directory=./GenericApp
+            ${{ runner.os }}-spm-
 
       - name: Build Archive
         run: |
-          xcodebuild -workspace GenericApp/GenericApp.xcworkspace -scheme "GenericApp" \
+          xcodebuild -project GenericApp/GenericApp.xcodeproj -scheme "GenericApp" \
           -archivePath $RUNNER_TEMP/genericapp.xcarchive \
           -sdk iphoneos \
           -configuration Release \
