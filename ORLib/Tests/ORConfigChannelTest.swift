@@ -98,8 +98,7 @@ struct ORConfigChannelTest {
 
         var response = Response()
         response.id = "0"
-        deviceMock.addMockData(try! response.serializedData())
-        // deviceMock.mockData = try! response.serializedBytes() // To be used when SwiftProtobuf version is bumped
+        deviceMock.addMockData(try! response.serializedBytes())
 
         var deviceInfoRequest = Request()
         deviceInfoRequest.body = .deviceInfo(Request.DeviceInfo())
@@ -243,7 +242,6 @@ struct ORConfigChannelTest {
         responseResult.result = result
         response.result = responseResult
         response.body = body
-        return try! response.serializedData()
-        //return try! response.serializedBytes() // To be used when SwiftProtobuf version is bumped
+        return try! response.serializedBytes()
     }
 }

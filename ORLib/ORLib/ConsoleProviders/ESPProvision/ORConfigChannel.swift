@@ -113,8 +113,7 @@ struct ORConfigChannel {
         messageId += 1
 
         do {
-            let data: Data? = try request.serializedData()
-            //let data: Data? = try request.serializedBytes() // To be used when SwiftProtobuf version is bumped
+            let data: Data? = try request.serializedBytes()
             guard let requestData = data else {
                 throw ORConfigChannelError.invalidRequest("Error serializing request")
             }
@@ -126,8 +125,7 @@ struct ORConfigChannel {
                         continuation.resume(throwing: ORConfigChannelError.genericError)
                     } else if let responseData {
                         do {
-                            let response = try Response(serializedData: responseData)
-                            //let response = try Response(serializedBytes: responseData) // To be used when SwiftProtobuf version is bumped
+                            let response = try Response(serializedBytes: responseData)
                             if response.id != request.id {
                                 continuation.resume(throwing: ORConfigChannelError.messageOutOfOrder)
                                 return

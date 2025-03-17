@@ -938,11 +938,11 @@ struct ESPProvisionProviderTest {
 
         #expect(mockDevice.receivedData.count == 3)
 
-        var request = try Request(serializedData: mockDevice.receivedData[0])
+        var request = try Request(serializedBytes: mockDevice.receivedData[0])
         #expect(request.id == "0")
         #expect(request.body == .deviceInfo(Request.DeviceInfo()))
 
-        request = try Request(serializedData: mockDevice.receivedData[1])
+        request = try Request(serializedBytes: mockDevice.receivedData[1])
         #expect(request.id == "1")
         if case let .openRemoteConfig(openRemoteConfig) = request.body {
             #expect(openRemoteConfig.realm == "master")
@@ -956,7 +956,7 @@ struct ESPProvisionProviderTest {
             Issue.record("Received an unexpected response: \(request)")
         }
 
-        request = try Request(serializedData: mockDevice.receivedData[2])
+        request = try Request(serializedBytes: mockDevice.receivedData[2])
         #expect(request.id == "2")
         #expect(request.body == .backendConnectionStatus(Request.BackendConnectionStatus()))
 
@@ -1025,11 +1025,11 @@ struct ESPProvisionProviderTest {
 
         try #require(mockDevice.receivedData.count == 5)
 
-        var request = try Request(serializedData: mockDevice.receivedData[0])
+        var request = try Request(serializedBytes: mockDevice.receivedData[0])
         #expect(request.id == "0")
         #expect(request.body == .deviceInfo(Request.DeviceInfo()))
 
-        request = try Request(serializedData: mockDevice.receivedData[1])
+        request = try Request(serializedBytes: mockDevice.receivedData[1])
         #expect(request.id == "1")
         if case let .openRemoteConfig(openRemoteConfig) = request.body {
             #expect(openRemoteConfig.realm == "master")
@@ -1044,7 +1044,7 @@ struct ESPProvisionProviderTest {
         }
 
         for i in 2...4 {
-            request = try Request(serializedData: mockDevice.receivedData[i])
+            request = try Request(serializedBytes: mockDevice.receivedData[i])
             #expect(request.id == String(i))
             #expect(request.body == .backendConnectionStatus(Request.BackendConnectionStatus()))
         }
@@ -1114,11 +1114,11 @@ struct ESPProvisionProviderTest {
 
         try #require(mockDevice.receivedData.count == 5)
 
-        var request = try Request(serializedData: mockDevice.receivedData[0])
+        var request = try Request(serializedBytes: mockDevice.receivedData[0])
         #expect(request.id == "0")
         #expect(request.body == .deviceInfo(Request.DeviceInfo()))
 
-        request = try Request(serializedData: mockDevice.receivedData[1])
+        request = try Request(serializedBytes: mockDevice.receivedData[1])
         #expect(request.id == "1")
         if case let .openRemoteConfig(openRemoteConfig) = request.body {
             #expect(openRemoteConfig.realm == "master")
@@ -1133,7 +1133,7 @@ struct ESPProvisionProviderTest {
         }
 
         for i in 2...4 {
-            request = try Request(serializedData: mockDevice.receivedData[i])
+            request = try Request(serializedBytes: mockDevice.receivedData[i])
             #expect(request.id == String(i))
             #expect(request.body == .backendConnectionStatus(Request.BackendConnectionStatus()))
         }
