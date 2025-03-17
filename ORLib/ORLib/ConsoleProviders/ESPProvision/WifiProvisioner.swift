@@ -29,30 +29,66 @@ class WifiProvisioner {
        )
 
     private var deviceConnection: DeviceConnection?
-    var sendDataCallback: SendDataCallback?
+    var callbackChannel: CallbackChannel?
 
+    private var loopDetector: LoopDetector
+    var searchWifiTimeout: TimeInterval {
+        get {
+            loopDetector.timeout
+        }
+        set {
+            self.loopDetector = LoopDetector(timeout: newValue, maxIterations: searchWifiMaxIterations)
+        }
+
+    }
+    var searchWifiMaxIterations: Int {
+        get {
+            loopDetector.maxIterations
+        }
+        set {
+            self.loopDetector = LoopDetector(timeout: searchWifiTimeout, maxIterations: newValue)
+        }
+
+    }
+
+#if DEBUG
+// TODO: see https://stackoverflow.com/a/60267724 for improvement
+    public private(set) var wifiScanning = false
+#else
     private var wifiScanning = false
+#endif
+
     private var wifiNetworks = [ESPWifiNetwork]()
 
-    init(deviceConnection: DeviceConnection?, sendDataCallback: SendDataCallback?) {
+    init(deviceConnection: DeviceConnection?, callbackChannel: CallbackChannel?, searchWifiTimeout: TimeInterval = 120, searchWifiMaxIterations: Int = 25) {
         self.deviceConnection = deviceConnection
-        self.sendDataCallback = sendDataCallback
+        self.callbackChannel = callbackChannel
+        self.loopDetector = LoopDetector(timeout: searchWifiTimeout, maxIterations: searchWifiMaxIterations)
     }
 
     public func startWifiScan() {
         guard deviceConnection?.isConnected ?? false else {
-            sendWifiScanError(ESPProviderError.notConnected)
+            sendWifiScanError(ESPProviderErrorCode.notConnected)
             return
         }
         wifiScanning = true
+        loopDetector.reset()
         scanWifi()
     }
 
-    public func stopWifiScan() {
+    public func stopWifiScan(sendMessage: Bool = true) {
         wifiScanning = false
+        if sendMessage {
+            callbackChannel?.sendMessage(action: Actions.stopWifiScan, data: nil)
+        }
     }
 
     private func scanWifi() {
+        if self.loopDetector.detectLoop() {
+            self.stopWifiScan(sendMessage: false)
+            self.sendWifiScanError(ESPProviderErrorCode.timeoutError)
+            return
+        }
         deviceConnection?.device?.scanWifiList { wifiList, error in
             if let wifiList {
                 if self.wifiScanning {
@@ -70,12 +106,8 @@ class WifiProvisioner {
                         }
                     }
                     if !self.wifiNetworks.isEmpty && wifiNetworksChanged {
-                        self.sendDataCallback?([
-                            DefaultsKey.providerKey: Providers.espprovision,
-                            DefaultsKey.actionKey: Actions.startWifiScan,
-                            DefaultsKey.dataKey: ["networks": self.wifiNetworks
-                                .map { ["ssid": $0.ssid, "signalStrength": $0.rssi] } ]
-                        ])
+                        self.callbackChannel?.sendMessage(action: Actions.startWifiScan,
+                                                         data: ["networks": self.wifiNetworks.map { ["ssid": $0.ssid, "signalStrength": $0.rssi] } ])
                     }
                     self.scanWifi()
                 }
@@ -89,17 +121,17 @@ class WifiProvisioner {
                         }
                     } else {
                         self.wifiScanning = false
-                        self.sendWifiScanError(ESPProviderError.communicationError, errorMessage: error.localizedDescription)
+                        self.sendWifiScanError(ESPProviderErrorCode.communicationError, errorMessage: error.localizedDescription)
                     }
                 } else {
                     self.wifiScanning = false
-                    self.sendWifiScanError(ESPProviderError.communicationError, errorMessage: "Did not receive any content from device")
+                    self.sendWifiScanError(ESPProviderErrorCode.communicationError, errorMessage: "Did not receive any content from device")
                 }
             }
         }
     }
 
-    private func sendWifiScanError(_ error: ESPProviderError? = nil, errorMessage: String? = nil) {
+    private func sendWifiScanError(_ error: ESPProviderErrorCode? = nil, errorMessage: String? = nil) {
         var data: [String: Any] = ["id": deviceConnection?.deviceId?.uuidString ?? "N/A"]
         if let error {
             data["errorCode"] = error.rawValue
@@ -107,19 +139,15 @@ class WifiProvisioner {
         if let errorMessage {
             data["errorMessage"] = errorMessage
         }
-        self.sendDataCallback?([
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.actionKey: Actions.stopWifiScan,
-            DefaultsKey.dataKey: data
-        ])
+        callbackChannel?.sendMessage(action: Actions.stopWifiScan, data: data)
     }
 
     public func sendWifiConfiguration(ssid: String, password: String) {
         guard deviceConnection?.isConnected ?? false else {
-            sendWifiConfigurationStatus(connected: false, error: ESPProviderError.notConnected)
+            sendWifiConfigurationStatus(connected: false, error: ESPProviderErrorCode.notConnected)
             return
         }
-        wifiScanning = false
+        stopWifiScan()
         deviceConnection?.device?.provision(ssid: ssid, passPhrase: password, threadOperationalDataset: nil) { status in
             // This block gets called multiple times
             // provision callback with status configApplied
@@ -127,6 +155,8 @@ class WifiProvisioner {
             // provision callback with status failure(ESPProvision.ESPProvisionError)
             // or
             // provision callback with status success
+            WifiProvisioner.logger.trace("provision callback with status: \(String(describing:status))")
+
             switch status {
             case .success:
                 self.sendWifiConfigurationStatus(connected: true)
@@ -139,30 +169,30 @@ class WifiProvisioner {
         }
     }
 
-    private func mapESPProvisionError(_ error: Error) -> ESPProviderError? {
+    private func mapESPProvisionError(_ error: Error) -> ESPProviderErrorCode? {
         guard let error = error as? ESPProvisionError else {
-            return ESPProviderError.genericError
+            return ESPProviderErrorCode.genericError
         }
         switch error {
         case .sessionError:
-            return ESPProviderError.communicationError
+            return ESPProviderErrorCode.communicationError
         case .configurationError, .wifiStatusError, .wifiStatusDisconnected:
-            return ESPProviderError.wifiConfigurationError
+            return ESPProviderErrorCode.wifiConfigurationError
         case .wifiStatusAuthenticationError:
-            return ESPProviderError.wifiAuthenticationError
+            return ESPProviderErrorCode.wifiAuthenticationError
         case .wifiStatusNetworkNotFound:
-            return ESPProviderError.wifiNetworkNotFound
+            return ESPProviderErrorCode.wifiNetworkNotFound
         case .wifiStatusUnknownError:
-            return ESPProviderError.wifiCommunicationError
+            return ESPProviderErrorCode.wifiCommunicationError
         case .threadStatusError, .threadStatusDettached, .threadDatasetInvalid, .threadStatusNetworkNotFound, .threadStatusUnknownError:
             // These are Thread related errors, a protocol we're not supporting
-            return ESPProviderError.genericError
+            return ESPProviderErrorCode.genericError
         case .unknownError:
-            return ESPProviderError.genericError
+            return ESPProviderErrorCode.genericError
         }
     }
 
-    private func sendWifiConfigurationStatus(connected: Bool, error: ESPProviderError? = nil, errorMessage: String? = nil) {
+    private func sendWifiConfigurationStatus(connected: Bool, error: ESPProviderErrorCode? = nil, errorMessage: String? = nil) {
         var data: [String: Any] = ["connected": connected]
         if let error {
             data["errorCode"] = error.rawValue
@@ -170,10 +200,6 @@ class WifiProvisioner {
         if let errorMessage {
             data["errorMessage"] = errorMessage
         }
-        self.sendDataCallback?([
-            DefaultsKey.actionKey: Actions.sendWifiConfiguration,
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.dataKey: data
-        ])
+        callbackChannel?.sendMessage(action: Actions.sendWifiConfiguration, data: data)
     }
 }

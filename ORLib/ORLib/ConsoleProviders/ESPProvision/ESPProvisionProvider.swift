@@ -35,22 +35,37 @@ class ESPProvisionProvider: NSObject {
     let userdefaults = UserDefaults(suiteName: DefaultsKey.groupEntitlement)
     let version = "beta"
 
+    private var searchDeviceTimeout: TimeInterval = 120
+    private var searchDeviceMaxIterations = 25
 
+    private var searchWifiTimeout: TimeInterval = 120
+    private var searchWifiMaxIterations = 25
 
-    private var deviceRegistry = DeviceRegistry()
+    private let deviceRegistry: DeviceRegistry
 
     private var deviceConnection: DeviceConnection?
 
     private var wifiProvisioner: WifiProvisioner?
 
+    typealias BatteryProvisionFactory = () -> BatteryProvision
+    private lazy var batteryProvisionFactory: BatteryProvisionFactory = {
+        BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel)
+    }
+
+    private var callbackChannel: CallbackChannel?
     var sendDataCallback: SendDataCallback? {
         didSet {
-            deviceRegistry.sendDataCallback = sendDataCallback
-            deviceConnection?.sendDataCallback = sendDataCallback
+            if let sendDataCallback {
+                callbackChannel = CallbackChannel(sendDataCallback: sendDataCallback, provider: Providers.espprovision)
+                deviceRegistry.callbackChannel = callbackChannel
+                deviceConnection?.callbackChannel = callbackChannel
+                wifiProvisioner?.callbackChannel = callbackChannel
+            }
         }
     }
 
     public override init() {
+        self.deviceRegistry = DeviceRegistry(searchDeviceTimeout: searchDeviceTimeout, searchDeviceMaxIterations: searchDeviceMaxIterations)
         super.init()
     }
 
@@ -112,7 +127,7 @@ class ESPProvisionProvider: NSObject {
 
     public func connectTo(deviceId idToConnectTo: String, pop: String? = nil, username: String? = nil) {
         if deviceConnection == nil {
-            deviceConnection = DeviceConnection(deviceRegistry: deviceRegistry, sendDataCallback: sendDataCallback)
+            deviceConnection = DeviceConnection(deviceRegistry: deviceRegistry, callbackChannel: callbackChannel)
         }
         deviceConnection!.connectTo(deviceId: idToConnectTo, pop: pop, username: username)
     }
@@ -127,26 +142,28 @@ class ESPProvisionProvider: NSObject {
             sendExitProvisioningError(.notConnected, errorMessage: "No connection established to device")
             return
         }
-        deviceConnection!.exitProvisioning()
+        do {
+            try deviceConnection!.exitProvisioning()
+        } catch let error as ESPProviderError {
+            sendExitProvisioningError(error.errorCode, errorMessage: error.errorMessage)
+        } catch {
+            sendExitProvisioningError(.genericError, errorMessage: error.localizedDescription)
+        }
     }
 
-    func sendExitProvisioningError(_ error: ESPProviderError, errorMessage: String?) {
+    private func sendExitProvisioningError(_ error: ESPProviderErrorCode, errorMessage: String?) {
         var data: [String: Any] = ["errorCode": error.rawValue]
         if let errorMessage {
             data["errorMessage"] = errorMessage
         }
-        self.sendDataCallback?([
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.actionKey: Actions.exitProvisioning,
-            DefaultsKey.dataKey: data
-        ])
+        callbackChannel?.sendMessage(action: Actions.exitProvisioning, data: data)
     }
 
     // MARK: Wifi scan
 
     public func startWifiScan() {
         if wifiProvisioner == nil {
-            wifiProvisioner = WifiProvisioner(deviceConnection: deviceConnection, sendDataCallback: sendDataCallback)
+            wifiProvisioner = WifiProvisioner(deviceConnection: deviceConnection, callbackChannel: callbackChannel, searchWifiTimeout: searchWifiTimeout, searchWifiMaxIterations: searchWifiMaxIterations)
         }
         wifiProvisioner!.startWifiScan()
     }
@@ -156,25 +173,89 @@ class ESPProvisionProvider: NSObject {
     }
 
     public func sendWifiConfiguration(ssid: String, password: String) {
+        if wifiProvisioner == nil {
+            wifiProvisioner = WifiProvisioner(deviceConnection: deviceConnection, callbackChannel: callbackChannel, searchWifiTimeout: searchWifiTimeout, searchWifiMaxIterations: searchWifiMaxIterations)
+        }
         wifiProvisioner?.sendWifiConfiguration(ssid: ssid, password: password)
     }
 
     // MARK: OR Configuration
 
+    public func provisionDevice(userToken: String) {
+        guard deviceConnection?.isConnected ?? false else {
+            sendProvisionDeviceError(.notConnected, errorMessage: "No connection established to device")
+            return
+        }
+        Task {
+            do {
+                let batteryProvision = batteryProvisionFactory()
 
+                try await batteryProvision.provision(userToken: userToken)
+            } catch let error as ESPProviderError {
+                sendExitProvisioningError(error.errorCode, errorMessage: error.errorMessage)
+            } catch {
+                sendExitProvisioningError(.genericError, errorMessage: error.localizedDescription)
+            }
+        }
+    }
+
+    private func sendProvisionDeviceError(_ error: ESPProviderErrorCode, errorMessage: String?) {
+        var data: [String: Any] = ["errorCode": error.rawValue]
+        if let errorMessage {
+            data["errorMessage"] = errorMessage
+        }
+        callbackChannel?.sendMessage(action: Actions.provisionDevice, data: data)
+    }
 }
 
 
 #if DEBUG
 // TODO: see https://stackoverflow.com/a/60267724 for improvement
 extension ESPProvisionProvider {
+    public convenience init(searchDeviceTimeout: TimeInterval = 120, searchDeviceMaxIterations: Int = 25,
+                            searchWifiTimeout: TimeInterval = 120, searchWifiMaxIterations: Int = 25,
+                            batteryProvisionAPI: BatteryProvisionAPI? = nil, backendConnectionTimeout: TimeInterval? = nil) {
+        self.init()
+        self.searchDeviceTimeout = searchDeviceTimeout
+        self.searchDeviceMaxIterations = searchDeviceMaxIterations
+        self.deviceRegistry.searchDeviceMaxIterations = searchDeviceMaxIterations
+        self.deviceRegistry.searchDeviceTimeout = searchDeviceTimeout
+
+        self.searchWifiTimeout = searchWifiTimeout
+        self.searchWifiMaxIterations = searchWifiMaxIterations
+
+        self.batteryProvisionFactory = {
+            let batteryProvision = BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel)
+            if let batteryProvisionAPI {
+                batteryProvision.batteryProvisionAPI = batteryProvisionAPI
+            }
+            if let backendConnectionTimeout {
+                batteryProvision.backendConnectionTimeout = backendConnectionTimeout
+            }
+            return batteryProvision
+        }
+    }
+
     func setProvisionManager(_ provisionManager: ORESPProvisionManager) {
         self.deviceRegistry.provisionManager = provisionManager
+    }
+
+    var  bleScanning: Bool {
+        self.deviceRegistry.bleScanning
+    }
+
+    var wifiScanning: Bool {
+        self.wifiProvisioner?.wifiScanning ?? false
     }
 }
 #endif
 
-public enum ESPProviderError: Int {
+public struct ESPProviderError: Error {
+    var errorCode: ESPProviderErrorCode
+    var errorMessage: String?
+}
+
+public enum ESPProviderErrorCode: Int {
     case unknownDevice = 100
 
     case bleCommunicationError = 200
@@ -189,6 +270,7 @@ public enum ESPProviderError: Int {
     case wifiAuthenticationError = 502
     case wifiNetworkNotFound = 503
 
+    case timeoutError = 600
 
     case genericError = 10000
 }

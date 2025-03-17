@@ -58,6 +58,23 @@
 		91DD9FEE29102A5800912F79 /* test10.json in Resources */ = {isa = PBXBuildFile; fileRef = 91DD9FED2910280900912F79 /* test10.json */; };
 		91DD9FF029102A8B00912F79 /* test11.json in Resources */ = {isa = PBXBuildFile; fileRef = 91DD9FEF29102A8B00912F79 /* test11.json */; };
 		91DF424E299FA79600DFF85E /* test13.json in Resources */ = {isa = PBXBuildFile; fileRef = 91DF424D299FA79600DFF85E /* test13.json */; };
+		91F2164A2D887B50008F9CA7 /* ESPProvision in Frameworks */ = {isa = PBXBuildFile; productRef = 91F216492D887B50008F9CA7 /* ESPProvision */; };
+		91F2164D2D887B73008F9CA7 /* RandomPasswordGenerator in Frameworks */ = {isa = PBXBuildFile; productRef = 91F2164C2D887B73008F9CA7 /* RandomPasswordGenerator */; };
+		91F2165A2D887BCF008F9CA7 /* LoopDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216542D887BCF008F9CA7 /* LoopDetector.swift */; };
+		91F2165B2D887BCF008F9CA7 /* BatteryProvision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F2164E2D887BCF008F9CA7 /* BatteryProvision.swift */; };
+		91F2165C2D887BCF008F9CA7 /* ORConfigChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216552D887BCF008F9CA7 /* ORConfigChannel.swift */; };
+		91F2165D2D887BCF008F9CA7 /* BatteryProvisionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F2164F2D887BCF008F9CA7 /* BatteryProvisionAPI.swift */; };
+		91F2165E2D887BCF008F9CA7 /* DeviceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216522D887BCF008F9CA7 /* DeviceRegistry.swift */; };
+		91F2165F2D887BCF008F9CA7 /* ORESPDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216572D887BCF008F9CA7 /* ORESPDevice.swift */; };
+		91F216602D887BCF008F9CA7 /* WifiProvisioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216582D887BCF008F9CA7 /* WifiProvisioner.swift */; };
+		91F216612D887BCF008F9CA7 /* ESPProvisionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216532D887BCF008F9CA7 /* ESPProvisionProvider.swift */; };
+		91F216622D887BCF008F9CA7 /* ORConfigChannelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216562D887BCF008F9CA7 /* ORConfigChannelProtocol.swift */; };
+		91F216632D887BCF008F9CA7 /* DeviceConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216512D887BCF008F9CA7 /* DeviceConnection.swift */; };
+		91F216642D887BCF008F9CA7 /* CallbackChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216502D887BCF008F9CA7 /* CallbackChannel.swift */; };
+		91F216692D887C53008F9CA7 /* BatteryProvisionAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216652D887C53008F9CA7 /* BatteryProvisionAPIMock.swift */; };
+		91F2166A2D887C53008F9CA7 /* ESPProvisionProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216662D887C53008F9CA7 /* ESPProvisionProviderTest.swift */; };
+		91F2166B2D887C53008F9CA7 /* ORESPDeviceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216682D887C53008F9CA7 /* ORESPDeviceMock.swift */; };
+		91F2166C2D887C53008F9CA7 /* ORConfigChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F216672D887C53008F9CA7 /* ORConfigChannelTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +155,21 @@
 		91DD9FED2910280900912F79 /* test10.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test10.json; sourceTree = "<group>"; };
 		91DD9FEF29102A8B00912F79 /* test11.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = test11.json; sourceTree = "<group>"; };
 		91DF424D299FA79600DFF85E /* test13.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test13.json; sourceTree = "<group>"; };
+		91F2164E2D887BCF008F9CA7 /* BatteryProvision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryProvision.swift; sourceTree = "<group>"; };
+		91F2164F2D887BCF008F9CA7 /* BatteryProvisionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryProvisionAPI.swift; sourceTree = "<group>"; };
+		91F216502D887BCF008F9CA7 /* CallbackChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackChannel.swift; sourceTree = "<group>"; };
+		91F216512D887BCF008F9CA7 /* DeviceConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConnection.swift; sourceTree = "<group>"; };
+		91F216522D887BCF008F9CA7 /* DeviceRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRegistry.swift; sourceTree = "<group>"; };
+		91F216532D887BCF008F9CA7 /* ESPProvisionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESPProvisionProvider.swift; sourceTree = "<group>"; };
+		91F216542D887BCF008F9CA7 /* LoopDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopDetector.swift; sourceTree = "<group>"; };
+		91F216552D887BCF008F9CA7 /* ORConfigChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORConfigChannel.swift; sourceTree = "<group>"; };
+		91F216562D887BCF008F9CA7 /* ORConfigChannelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORConfigChannelProtocol.swift; sourceTree = "<group>"; };
+		91F216572D887BCF008F9CA7 /* ORESPDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORESPDevice.swift; sourceTree = "<group>"; };
+		91F216582D887BCF008F9CA7 /* WifiProvisioner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiProvisioner.swift; sourceTree = "<group>"; };
+		91F216652D887C53008F9CA7 /* BatteryProvisionAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryProvisionAPIMock.swift; sourceTree = "<group>"; };
+		91F216662D887C53008F9CA7 /* ESPProvisionProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESPProvisionProviderTest.swift; sourceTree = "<group>"; };
+		91F216672D887C53008F9CA7 /* ORConfigChannelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORConfigChannelTest.swift; sourceTree = "<group>"; };
+		91F216682D887C53008F9CA7 /* ORESPDeviceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ORESPDeviceMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +177,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91F2164D2D887B73008F9CA7 /* RandomPasswordGenerator in Frameworks */,
+				91F2164A2D887B50008F9CA7 /* ESPProvision in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +232,7 @@
 		4CF5D05127143F1F00D705BE /* ConsoleProviders */ = {
 			isa = PBXGroup;
 			children = (
+				91F216592D887BCF008F9CA7 /* ESPProvision */,
 				4CF5D05227143F1F00D705BE /* StorageProvider.swift */,
 				4CF5D05327143F1F00D705BE /* GeofenceProvider.swift */,
 				4CF5D05427143F1F00D705BE /* PushNotificationProvider.swift */,
@@ -294,8 +329,30 @@
 				91A9A8FA28BF6A4900DF8928 /* ConfigManagerTest.swift */,
 				91A9A90028BF6EA000DF8928 /* FileApiManager.swift */,
 				91AA79F228D628E9005B9913 /* Fixture.swift */,
+				91F216652D887C53008F9CA7 /* BatteryProvisionAPIMock.swift */,
+				91F216662D887C53008F9CA7 /* ESPProvisionProviderTest.swift */,
+				91F216672D887C53008F9CA7 /* ORConfigChannelTest.swift */,
+				91F216682D887C53008F9CA7 /* ORESPDeviceMock.swift */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		91F216592D887BCF008F9CA7 /* ESPProvision */ = {
+			isa = PBXGroup;
+			children = (
+				91F2164E2D887BCF008F9CA7 /* BatteryProvision.swift */,
+				91F2164F2D887BCF008F9CA7 /* BatteryProvisionAPI.swift */,
+				91F216502D887BCF008F9CA7 /* CallbackChannel.swift */,
+				91F216512D887BCF008F9CA7 /* DeviceConnection.swift */,
+				91F216522D887BCF008F9CA7 /* DeviceRegistry.swift */,
+				91F216532D887BCF008F9CA7 /* ESPProvisionProvider.swift */,
+				91F216542D887BCF008F9CA7 /* LoopDetector.swift */,
+				91F216552D887BCF008F9CA7 /* ORConfigChannel.swift */,
+				91F216562D887BCF008F9CA7 /* ORConfigChannelProtocol.swift */,
+				91F216572D887BCF008F9CA7 /* ORESPDevice.swift */,
+				91F216582D887BCF008F9CA7 /* WifiProvisioner.swift */,
+			);
+			path = ESPProvision;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -376,6 +433,10 @@
 				Base,
 			);
 			mainGroup = 4CF5D03E27143EEB00D705BE;
+			packageReferences = (
+				91F216482D887B50008F9CA7 /* XCRemoteSwiftPackageReference "esp-idf-provisioning-ios" */,
+				91F2164B2D887B73008F9CA7 /* XCRemoteSwiftPackageReference "RandomPasswordGenerator" */,
+			);
 			productRefGroup = 4CF5D04827143EEC00D705BE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -439,6 +500,17 @@
 				4CBDF2C72AE2869D00C7D94C /* ProjectConfig.swift in Sources */,
 				4CBDF2C82AE2869D00C7D94C /* ORNotificationResource.swift in Sources */,
 				4CBDF2C92AE2869D00C7D94C /* HttpApiManager.swift in Sources */,
+				91F2165A2D887BCF008F9CA7 /* LoopDetector.swift in Sources */,
+				91F2165B2D887BCF008F9CA7 /* BatteryProvision.swift in Sources */,
+				91F2165C2D887BCF008F9CA7 /* ORConfigChannel.swift in Sources */,
+				91F2165D2D887BCF008F9CA7 /* BatteryProvisionAPI.swift in Sources */,
+				91F2165E2D887BCF008F9CA7 /* DeviceRegistry.swift in Sources */,
+				91F2165F2D887BCF008F9CA7 /* ORESPDevice.swift in Sources */,
+				91F216602D887BCF008F9CA7 /* WifiProvisioner.swift in Sources */,
+				91F216612D887BCF008F9CA7 /* ESPProvisionProvider.swift in Sources */,
+				91F216622D887BCF008F9CA7 /* ORConfigChannelProtocol.swift in Sources */,
+				91F216632D887BCF008F9CA7 /* DeviceConnection.swift in Sources */,
+				91F216642D887BCF008F9CA7 /* CallbackChannel.swift in Sources */,
 				4CBDF2CA2AE2869D00C7D94C /* ApiManager.swift in Sources */,
 				4CBDF2CB2AE2869D00C7D94C /* ORTextInput.swift in Sources */,
 				4CBDF2CC2AE2869D00C7D94C /* ORViewController.swift in Sources */,
@@ -460,6 +532,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91F216692D887C53008F9CA7 /* BatteryProvisionAPIMock.swift in Sources */,
+				91F2166A2D887C53008F9CA7 /* ESPProvisionProviderTest.swift in Sources */,
+				91F2166B2D887C53008F9CA7 /* ORESPDeviceMock.swift in Sources */,
+				91F2166C2D887C53008F9CA7 /* ORConfigChannelTest.swift in Sources */,
 				91A9A90128BF6EA000DF8928 /* FileApiManager.swift in Sources */,
 				91A9A8FB28BF6A4900DF8928 /* ConfigManagerTest.swift in Sources */,
 				91AA79F328D628E9005B9913 /* Fixture.swift in Sources */,
@@ -496,7 +572,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -537,7 +613,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -687,7 +763,7 @@
 				DEVELOPMENT_TEAM = 4AC88KZHJZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.openremote.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -707,7 +783,7 @@
 				DEVELOPMENT_TEAM = 4AC88KZHJZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.openremote.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -749,6 +825,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		91F216482D887B50008F9CA7 /* XCRemoteSwiftPackageReference "esp-idf-provisioning-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/espressif/esp-idf-provisioning-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.2;
+			};
+		};
+		91F2164B2D887B73008F9CA7 /* XCRemoteSwiftPackageReference "RandomPasswordGenerator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yukanamori/RandomPasswordGenerator.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		91F216492D887B50008F9CA7 /* ESPProvision */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91F216482D887B50008F9CA7 /* XCRemoteSwiftPackageReference "esp-idf-provisioning-ios" */;
+			productName = ESPProvision;
+		};
+		91F2164C2D887B73008F9CA7 /* RandomPasswordGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 91F2164B2D887B73008F9CA7 /* XCRemoteSwiftPackageReference "RandomPasswordGenerator" */;
+			productName = RandomPasswordGenerator;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4CF5D03F27143EEC00D705BE /* Project object */;
 }

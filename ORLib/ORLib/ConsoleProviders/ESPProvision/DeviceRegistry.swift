@@ -32,14 +32,21 @@ struct EspressifProvisionManager: ORESPProvisionManager {
     var provisionManager: ESPProvisionManager = ESPProvisionManager.shared
 
 
-    // TODO: how can I protect against multiple potential callbacks and not call continuation multiple times ?
-
     public func searchESPDevices(devicePrefix: String, transport: ESPTransport, security: ESPSecurity = .secure) async throws -> [ORESPDevice] {
         return try await withCheckedThrowingContinuation { continuation in
+            // We want to protect ourself against multiple resume of the continuation
+            // This happened because searchESPDevices would call its callback a second time with an error when explicitly stopping the device search
+            // even after the search has already completed with a list of device
+            var alreadyResumed = false
+
             provisionManager.searchESPDevices(devicePrefix: devicePrefix, transport: transport, security: security) { deviceList, error in
                 if let error {
-                    continuation.resume(throwing: error)
+                    if !alreadyResumed {
+                        alreadyResumed = true
+                        continuation.resume(throwing: error)
+                    }
                 } else {
+                    alreadyResumed = true
                     continuation.resume(returning: deviceList ?? [])
                 }
             }
@@ -57,15 +64,39 @@ class DeviceRegistry {
            category: String(describing: ESPProvisionProvider.self)
        )
 
+    var callbackChannel: CallbackChannel?
+
+    private var loopDetector: LoopDetector
+    var searchDeviceTimeout: TimeInterval {
+        get {
+            loopDetector.timeout
+        }
+        set {
+            self.loopDetector = LoopDetector(timeout: newValue, maxIterations: searchDeviceMaxIterations)
+        }
+
+    }
+    var searchDeviceMaxIterations: Int {
+        get {
+            loopDetector.maxIterations
+        }
+        set {
+            self.loopDetector = LoopDetector(timeout: searchDeviceTimeout, maxIterations: newValue)
+        }
+
+    }
+
     private var devices: [DiscoveredDevice] = []
     private var devicesIndex: [UUID:DiscoveredDevice] = [:]
 
-
     // TODO: check if here or some place else or how to be set ?
-    var sendDataCallback: SendDataCallback?
     var provisionManager: ORESPProvisionManager?
 
     public private(set) var bleScanning = false
+
+    init(searchDeviceTimeout: TimeInterval, searchDeviceMaxIterations: Int) {
+        self.loopDetector = LoopDetector(timeout: searchDeviceTimeout, maxIterations: searchDeviceMaxIterations)
+    }
 
     func enable() {
         provisionManager = EspressifProvisionManager(provisionManager: ESPProvisionManager.shared)
@@ -81,19 +112,30 @@ class DeviceRegistry {
     public func startDevicesScan(prefix: String? = nil) {
         bleScanning = true
         resetDevicesList()
+        loopDetector.reset()
         devicesScan(prefix: prefix ?? "")
     }
 
-    public func stopDevicesScan() {
+    public func stopDevicesScan(sendMessage: Bool = true) {
         bleScanning = false
         provisionManager?.stopESPDevicesSearch()
+        if sendMessage {
+            callbackChannel?.sendMessage(action: Actions.stopBleScan, data: nil)
+        }
     }
 
     private func devicesScan(prefix: String) {
         if let provisionManager {
             Task {
                 do {
+                    if loopDetector.detectLoop() {
+                        self.stopDevicesScan(sendMessage: false)
+                        sendDeviceScanError(ESPProviderErrorCode.timeoutError)
+                        return
+                    }
+                    Self.logger.trace("devicesScan will searchESPDevices")
                     let deviceList = try await provisionManager.searchESPDevices(devicePrefix: prefix, transport: .ble, security: .secure)
+                    Self.logger.trace("devicesScan return from searchESPDevices")
 
                     if self.bleScanning { // If we're not scanning anymore, we don't report back
                         var devicesChanged = false
@@ -108,11 +150,7 @@ class DeviceRegistry {
                         }
                         // If there are devices in the list and the list changed since the last time, we communicated to web app
                         if !self.devices.isEmpty && devicesChanged {
-                            self.sendDataCallback?([
-                                DefaultsKey.providerKey: Providers.espprovision,
-                                DefaultsKey.actionKey: Actions.startBleScan,
-                                DefaultsKey.dataKey: ["devices": self.devices.map { $0.info }]
-                            ])
+                            callbackChannel?.sendMessage(action: Actions.startBleScan, data: ["devices": self.devices.map(\.info)])
                         }
                         self.devicesScan(prefix: prefix)
                     }
@@ -127,8 +165,8 @@ class DeviceRegistry {
                             if self.bleScanning {
                                 self.devicesScan(prefix: prefix)
                             }
-                        } else { sendDeviceScanError(ESPProviderError.genericError) }
-                    } else { sendDeviceScanError(ESPProviderError.genericError) }
+                        } else { sendDeviceScanError(ESPProviderErrorCode.genericError) }
+                    } else { sendDeviceScanError(ESPProviderErrorCode.genericError) }
 
                     // TODO: seems we can't have BLE permissions error here, but want to test
 
@@ -137,23 +175,19 @@ class DeviceRegistry {
         }
     }
 
-    private func sendDeviceScanError(_ error: ESPProviderError, errorMessage: String? = nil) {
+    private func sendDeviceScanError(_ error: ESPProviderErrorCode, errorMessage: String? = nil) {
         var data: [String: Any] = ["errorCode": error.rawValue]
         if let errorMessage {
             data["errorMessage"] = errorMessage
         }
-        self.sendDataCallback?([
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.actionKey: Actions.stopBleScan,
-            DefaultsKey.dataKey: data
-        ])
+        callbackChannel?.sendMessage(action: Actions.stopBleScan, data: data)
     }
 
     private func resetDevicesList() {
         devices = []
         devicesIndex = [:]
     }
-    
+
     private func getDeviceNamed(_ name: String) -> DiscoveredDevice? {
         return devices.first(where: { $0.device.name == name })
     }

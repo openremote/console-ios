@@ -29,23 +29,25 @@ class DeviceConnection {
            category: String(describing: ESPProvisionProvider.self)
        )
 
+    var callbackChannel: CallbackChannel?
+
     private var deviceRegistry: DeviceRegistry
-    var sendDataCallback: SendDataCallback?
 
     private var username = "UNUSED"
     private var pop = "abcd1234"
 
     private var bleStatus = BLEStatus.disconnected
 
-    // Those are reset when disconnected from device
     // deviceId and device are set as soon as connection is attempted, configChannel only when connection is established
+    // deviceId and device are kept on ble disconnection, configChannel is reset on ble disconnection
+    // resetting deviceId and device would causes issue in case ble connection is dropped and re-created by device
     public private(set) var deviceId: UUID?
     public private(set) var device: ORESPDevice?
     private var configChannel: ORConfigChannel?
 
-    init(deviceRegistry: DeviceRegistry, sendDataCallback: SendDataCallback?) {
+    init(deviceRegistry: DeviceRegistry, callbackChannel: CallbackChannel?) {
         self.deviceRegistry = deviceRegistry
-        self.sendDataCallback = sendDataCallback
+        self.callbackChannel = callbackChannel
     }
 
     public func connectTo(deviceId idToConnectTo: String, pop: String? = nil, username: String? = nil) {
@@ -74,11 +76,8 @@ class DeviceConnection {
                     self.sendConnectToDeviceStatus(status: ESPProviderConnectToDeviceStatus.connectionError, error: self.mapESPSessionError(error), errorMessage: error.localizedDescription)
                 case .disconnected:
                     self.bleStatus = .disconnected
-                    self.device?.bleDelegate = nil
-                    self.device = nil
+                    self.configChannel = nil
                     self.sendConnectToDeviceStatus(status: ESPProviderConnectToDeviceStatus.disconnected)
-                    // Only reset deviceId after sending the status as it's part of the message
-                    self.deviceId = nil
                     break
                 }
             }
@@ -87,19 +86,19 @@ class DeviceConnection {
         }
     }
 
-    private func mapESPSessionError(_ error: Error) -> ESPProviderError? {
+    private func mapESPSessionError(_ error: Error) -> ESPProviderErrorCode? {
         guard let error = error as? ESPSessionError else {
-            return ESPProviderError.genericError
+            return ESPProviderErrorCode.genericError
         }
         switch error {
         case .sessionInitError, .sessionNotEstablished, .sendDataError, .versionInfoError:
-            return ESPProviderError.communicationError
+            return ESPProviderErrorCode.communicationError
         case .bleFailedToConnect:
-            return ESPProviderError.bleCommunicationError
+            return ESPProviderErrorCode.bleCommunicationError
         case .securityMismatch, .encryptionError, .noPOP, .noUsername:
-            return ESPProviderError.securityError
+            return ESPProviderErrorCode.securityError
         case .softAPConnectionFailure:
-            return ESPProviderError.genericError
+            return ESPProviderErrorCode.genericError
         }
     }
 
@@ -109,7 +108,7 @@ class DeviceConnection {
         }
     }
 
-    private func sendConnectToDeviceStatus(status: String, error: ESPProviderError? = nil, errorMessage: String? = nil) {
+    private func sendConnectToDeviceStatus(status: String, error: ESPProviderErrorCode? = nil, errorMessage: String? = nil) {
         var data: [String: Any] = ["id": deviceId?.uuidString ?? "N/A", "status": status]
         if let error {
             data["errorCode"] = error.rawValue
@@ -117,44 +116,58 @@ class DeviceConnection {
         if let errorMessage {
             data["errorMessage"] = errorMessage
         }
-        self.sendDataCallback?([
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.actionKey: Actions.connectToDevice,
-            DefaultsKey.dataKey: data
-        ])
+        callbackChannel?.sendMessage(action: Actions.connectToDevice, data: data)
     }
 
     var isConnected: Bool {
-        device != nil && configChannel != nil
+        bleStatus == .connected && device != nil && configChannel != nil
     }
 
-    func exitProvisioning() {
+    func exitProvisioning() throws {
         if !isConnected {
-            sendExitProvisioningError(.notConnected, errorMessage: "No connection established to device")
-            return
+            throw ESPProviderError(errorCode: .notConnected, errorMessage: "No connection established to device")
         }
         Task {
             do {
                 try await configChannel!.exitProvisioning()
             } catch {
-                sendExitProvisioningError(.communicationError, errorMessage: error.localizedDescription)
+                throw ESPProviderError(errorCode: .communicationError, errorMessage: error.localizedDescription)
             }
         }
     }
 
-    // TODO: this code is duplicated, how to improve ?
-    func sendExitProvisioningError(_ error: ESPProviderError, errorMessage: String?) {
-        var data: [String: Any] = ["errorCode": error.rawValue]
-        if let errorMessage {
-            data["errorMessage"] = errorMessage
+    func getDeviceInfo() async throws -> DeviceInfo {
+        if !isConnected {
+            throw ESPProviderError(errorCode: .notConnected, errorMessage: "No connection established to device")
         }
-        self.sendDataCallback?([
-            DefaultsKey.providerKey: Providers.espprovision,
-            DefaultsKey.actionKey: Actions.exitProvisioning,
-            DefaultsKey.dataKey: data
-        ])
+        do {
+            return try await configChannel!.getDeviceInfo()
+        } catch {
+            throw ESPProviderError(errorCode: .communicationError, errorMessage: error.localizedDescription)
+        }
     }
 
+    func sendOpenRemoteConfig(mqttBrokerUrl: String, mqttUser: String, mqttPassword: String, assetId: String) async throws {
+        if !isConnected {
+            throw ESPProviderError(errorCode: .notConnected, errorMessage: "No connection established to device")
+        }
+        do {
+            try await configChannel!.sendOpenRemoteConfig(mqttBrokerUrl: mqttBrokerUrl, mqttUser: mqttUser, mqttPassword: mqttPassword, assetId: assetId)
+        } catch {
+            throw ESPProviderError(errorCode: .communicationError, errorMessage: error.localizedDescription)
+        }
+    }
+
+    func getBackendConnectionStatus() async throws -> BackendConnectionStatus {
+        if !isConnected {
+            throw ESPProviderError(errorCode: .notConnected, errorMessage: "No connection established to device")
+        }
+        do {
+            return try await configChannel!.getBackendConnectionStatus()
+        } catch {
+            throw ESPProviderError(errorCode: .communicationError, errorMessage: error.localizedDescription)
+        }
+    }
 }
 
 extension DeviceConnection: ESPBLEDelegate {
@@ -165,11 +178,7 @@ extension DeviceConnection: ESPBLEDelegate {
     func peripheralDisconnected(peripheral: CBPeripheral, error: Error?) {
         bleStatus = .disconnected
         self.configChannel = nil
-        self.device?.bleDelegate = nil
-        self.device = nil
         self.sendConnectToDeviceStatus(status: ESPProviderConnectToDeviceStatus.disconnected)
-        // Only reset deviceId after sending the status as it's part of the message
-        self.deviceId = nil
     }
 
     func peripheralFailedToConnect(peripheral: CBPeripheral?, error: Error?) {
