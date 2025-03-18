@@ -17,12 +17,12 @@ jobs:
     steps:
 
       - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.12.1
+        uses: styfle/cancel-workflow-action@85880fa0301c86cca9da44039ee3bb12d3bedbfa # 0.12.1
         with:
           access_token: ${{ github.token }}
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Install the Apple certificate and provisioning profile
         env:
@@ -59,7 +59,7 @@ jobs:
           cp $NOTIDICATION_SERVICE_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Swift Package Manager cache
-        uses: actions/cache@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
         with:
           path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
@@ -85,7 +85,7 @@ jobs:
 
       # - name: Upload IPAs
       #   if: success()
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
       #   with:
       #     name: ipas
       #     path: |
