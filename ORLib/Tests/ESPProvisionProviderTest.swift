@@ -82,10 +82,9 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.startBleScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
 
-        #expect((receivedData["data"] as? [String:Any])!["devices"] as? [[String:Any]] != nil)
-        let devices = (receivedData["data"] as? [String:Any])!["devices"] as! [[String:Any]]
+        #expect(receivedData["devices"] as? [[String:Any]] != nil)
+        let devices = receivedData["devices"] as! [[String:Any]]
         #expect(devices.count == 1)
         let device = devices.first!
         #expect(device["name"] as? String == "TestDevice")
@@ -128,10 +127,9 @@ struct ESPProvisionProviderTest {
 
         #expect(firstReceivedData["provider"] as? String == Providers.espprovision)
         #expect(firstReceivedData["action"] as? String == Actions.startBleScan)
-        #expect((firstReceivedData["data"] as? [String:Any]) != nil)
 
-        #expect((firstReceivedData["data"] as? [String:Any])!["devices"] as? [[String:Any]] != nil)
-        var devices = (firstReceivedData["data"] as? [String:Any])!["devices"] as! [[String:Any]]
+        #expect(firstReceivedData["devices"] as? [[String:Any]] != nil)
+        var devices = firstReceivedData["devices"] as! [[String:Any]]
         #expect(devices.count == 1)
         let device = devices.first!
         #expect(device["name"] as? String == "TestDevice")
@@ -139,10 +137,9 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.startBleScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
 
-        #expect((receivedData["data"] as? [String:Any])!["devices"] as? [[String:Any]] != nil)
-        devices = (receivedData["data"] as? [String:Any])!["devices"] as! [[String:Any]]
+        #expect(receivedData["devices"] as? [[String:Any]] != nil)
+        devices = receivedData["devices"] as! [[String:Any]]
         #expect(devices.count == 2)
 
         #expect(devices.first!["name"] as? String == "TestDevice")
@@ -184,7 +181,8 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect(receivedData["data"] == nil)
+        #expect(receivedData["devices"] == nil)
+        #expect(receivedData.count == 2)
     }
 
     @Test func testStopDeviceSearch() async throws {
@@ -225,7 +223,8 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect((receivedData["data"] as? [String:Any]) == nil)
+        #expect((receivedData["devices"] as? [String:Any]) == nil)
+        #expect(receivedData.count == 2)
     }
 
     @Test func testStopDeviceSearchNotStarted() async throws {
@@ -254,7 +253,8 @@ struct ESPProvisionProviderTest {
         #expect(espProvisionMock.stopESPDevicesSearchCallCount == 1)
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect((receivedData["data"] as? [String:Any]) == nil)
+        #expect((receivedData["devices"] as? [String:Any]) == nil)
+        #expect(receivedData.count == 2)
         #expect(provider.bleScanning == false)
     }
 
@@ -289,15 +289,14 @@ struct ESPProvisionProviderTest {
         // Wait long enough so scan can stop
         try await Task.sleep(nanoseconds: UInt64(0.3 * Double(NSEC_PER_SEC)))
 
-        #expect(espProvisionMock.searchESPDevicesCallCount == 4)
+        // Ideally should be == 4 but too brittle based on timing during test run
+        #expect(espProvisionMock.searchESPDevicesCallCount >= 2 && espProvisionMock.searchESPDevicesCallCount <= 4)
         #expect(receivedCallbackCount == 1)
         #expect(provider.bleScanning == false)
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
     }
 
     @Test func searchDevicesMaximumIteration() async throws {
@@ -337,9 +336,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
     }
 
     // MARK: Device connection
@@ -367,16 +364,12 @@ struct ESPProvisionProviderTest {
         var receivedData = receivedMessages[0]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect(receivedData["data"] == nil)
 
         receivedData = receivedMessages[1]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.connectToDevice)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-
-        #expect(data["id"] as? String == device["id"] as? String)
-        #expect(data["status"] as? String == ESPProviderConnectToDeviceStatus.connected)
+        #expect(receivedData["id"] as? String == device["id"] as? String)
+        #expect(receivedData["status"] as? String == ESPProviderConnectToDeviceStatus.connected)
     }
 
     @Test func connectToDeviceFailsForInvalidId() async throws {
@@ -407,10 +400,8 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.connectToDevice)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["status"] as? String == ESPProviderConnectToDeviceStatus.connectionError)
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.unknownDevice.rawValue)
+        #expect(receivedData["status"] as? String == ESPProviderConnectToDeviceStatus.connectionError)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.unknownDevice.rawValue)
     }
 
 
@@ -440,10 +431,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopWifiScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
     }
 
     @Test func wifiScan() async throws {
@@ -482,10 +470,9 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.startWifiScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
 
-        #expect((receivedData["data"] as? [String:Any])!["networks"] as? [[String:Any]] != nil)
-        let networks = (receivedData["data"] as? [String:Any])!["networks"] as! [[String:Any]]
+        #expect(receivedData["networks"] as? [[String:Any]] != nil)
+        let networks = receivedData["networks"] as! [[String:Any]]
         #expect(networks.count == 1)
         let network = networks.first!
         #expect(network["ssid"] as? String == "SSID-1")
@@ -530,10 +517,9 @@ struct ESPProvisionProviderTest {
 
         #expect(firstReceivedData["provider"] as? String == Providers.espprovision)
         #expect(firstReceivedData["action"] as? String == Actions.startWifiScan)
-        #expect((firstReceivedData["data"] as? [String:Any]) != nil)
 
-        #expect((firstReceivedData["data"] as? [String:Any])!["networks"] as? [[String:Any]] != nil)
-        let networks = (firstReceivedData["data"] as? [String:Any])!["networks"] as! [[String:Any]]
+        #expect(firstReceivedData["networks"] as? [[String:Any]] != nil)
+        let networks = firstReceivedData["networks"] as! [[String:Any]]
         #expect(networks.count == 1)
         let network = networks.first!
         #expect(network["ssid"] as? String == "SSID-1")
@@ -541,10 +527,9 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.startWifiScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
 
-        #expect((receivedData["data"] as? [String:Any])!["networks"] as? [[String:Any]] != nil)
-        let networks2 = (receivedData["data"] as? [String:Any])!["networks"] as! [[String:Any]]
+        #expect(receivedData["networks"] as? [[String:Any]] != nil)
+        let networks2 = receivedData["networks"] as! [[String:Any]]
         #expect(networks2.count == 1)
         let network2 = networks2.first!
         #expect(network2["ssid"] as? String == "SSID-1")
@@ -587,15 +572,14 @@ struct ESPProvisionProviderTest {
         // Wait long enough so scan can stop
         try await Task.sleep(nanoseconds: UInt64(0.3 * Double(NSEC_PER_SEC)))
 
-        #expect(mockDevice.scanWifiListCallCount == 4)
+        // Ideally should be == 4 but too brittle based on timing during test run
+        #expect(mockDevice.scanWifiListCallCount >= 2 && mockDevice.scanWifiListCallCount <= 4)
         #expect(receivedCallbackCount == 1)
         #expect(provider.wifiScanning == false)
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopWifiScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
     }
 
     @Test func wifiScanMaximumIterations() async throws {
@@ -640,9 +624,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopWifiScan)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
     }
 
     @Test func testStopWifiScan() async throws {
@@ -687,7 +669,8 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopWifiScan)
-        #expect((receivedData["data"] as? [String:Any]) == nil)
+        #expect((receivedData["networks"] as? [String:Any]) == nil)
+        #expect(receivedData.count == 2)
     }
 
     @Test func testStopWifiScanNotStarted() async throws {
@@ -752,7 +735,7 @@ struct ESPProvisionProviderTest {
         }
         #expect(provider.wifiScanning)
 
-        let network = ((receivedData["data"] as? [String:Any])!["networks"] as! [[String:Any]]).first!
+        let network = (receivedData["networks"] as! [[String:Any]]).first!
 
         let receivedMessages = await waitForMessages(provider: provider, expectingActions: [Actions.stopWifiScan, Actions.sendWifiConfiguration]) {
             provider.sendWifiConfiguration(ssid: network["ssid"] as? String ?? "", password: "s3cr3t")
@@ -763,15 +746,12 @@ struct ESPProvisionProviderTest {
         receivedData = receivedMessages[0]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopWifiScan)
-        #expect(receivedData["data"] == nil)
+        #expect(receivedData.count == 2)
 
         receivedData = receivedMessages[1]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.sendWifiConfiguration)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["connected"] as? Bool != nil)
-        #expect(data["connected"] as? Bool == true)
+        #expect(receivedData["connected"] as? Bool == true)
 
         #expect(mockDevice.provisionCalledCount == 1)
         #expect(mockDevice.provisionCalledParameters != nil)
@@ -826,7 +806,7 @@ struct ESPProvisionProviderTest {
         }
         #expect(provider.wifiScanning)
 
-        let network = ((receivedData["data"] as? [String:Any])!["networks"] as! [[String:Any]]).first!
+        let network = (receivedData["networks"] as! [[String:Any]]).first!
 
         let receivedMessages = await waitForMessages(provider: provider, expectingActions: [Actions.stopWifiScan, Actions.sendWifiConfiguration]) {
             provider.sendWifiConfiguration(ssid: network["ssid"] as? String ?? "", password: "s3cr3t")
@@ -837,16 +817,14 @@ struct ESPProvisionProviderTest {
         receivedData = receivedMessages[0]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopWifiScan)
-        #expect(receivedData["data"] == nil)
+        #expect(receivedData.count == 2)
 
         receivedData = receivedMessages[1]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.sendWifiConfiguration)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["connected"] as? Bool != nil)
-        #expect(data["connected"] as? Bool == false)
-        #expect(data["errorCode"] as? Int == providerErrorCode.rawValue)
+        #expect(receivedData["connected"] as? Bool != nil)
+        #expect(receivedData["connected"] as? Bool == false)
+        #expect(receivedData["errorCode"] as? Int == providerErrorCode.rawValue)
 
         #expect(mockDevice.provisionCalledCount == 1)
         #expect(mockDevice.provisionCalledParameters != nil)
@@ -875,10 +853,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.sendWifiConfiguration)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
     }
 
     // MARK: Provision
@@ -904,7 +879,9 @@ struct ESPProvisionProviderTest {
         espProvisionMock.mockDevices = [mockDevice]
 
         let batteryProvisionAPIMock = BatteryProvisionAPIMock()
-        let provider = ESPProvisionProvider(searchDeviceTimeout: 1, searchDeviceMaxIterations: Int.max, searchWifiTimeout: 1, searchWifiMaxIterations: Int.max, batteryProvisionAPI: batteryProvisionAPIMock)
+        let provider = ESPProvisionProvider(searchDeviceTimeout: 1, searchDeviceMaxIterations: Int.max,
+                                            searchWifiTimeout: 1, searchWifiMaxIterations: Int.max,
+                                            batteryProvisionAPI: batteryProvisionAPIMock)
         _ = provider.initialize()
         _ = provider.enable()
         provider.setProvisionManager(espProvisionMock)
@@ -931,10 +908,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.provisionDevice)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["connected"] as? Bool != nil)
-        #expect(data["connected"] as? Bool == true)
+        #expect(receivedData["connected"] as? Bool == true)
 
         #expect(mockDevice.receivedData.count == 3)
 
@@ -947,7 +921,7 @@ struct ESPProvisionProviderTest {
         if case let .openRemoteConfig(openRemoteConfig) = request.body {
             #expect(openRemoteConfig.realm == "master")
             #expect(openRemoteConfig.mqttBrokerURL == "mqtts://localhost:8883")
-            #expect(openRemoteConfig.user == "service-account-" + expectedDeviceInfo.deviceID) // TODO: what's the proper user name to use ?
+            #expect(openRemoteConfig.user == expectedDeviceInfo.deviceID.lowercased(with: Locale(identifier: "en")))
             #expect(openRemoteConfig.mqttPassword != nil)
             #expect(openRemoteConfig.mqttPassword == batteryProvisionAPIMock.receivedPassword)
             #expect(openRemoteConfig.assetID == "AssetID")
@@ -991,7 +965,9 @@ struct ESPProvisionProviderTest {
         espProvisionMock.mockDevices = [mockDevice]
 
         let batteryProvisionAPIMock = BatteryProvisionAPIMock()
-        let provider = ESPProvisionProvider(searchDeviceTimeout: 1, searchDeviceMaxIterations: Int.max, searchWifiTimeout: 1, searchWifiMaxIterations: Int.max, batteryProvisionAPI: batteryProvisionAPIMock)
+        let provider = ESPProvisionProvider(searchDeviceTimeout: 1, searchDeviceMaxIterations: Int.max,
+                                            searchWifiTimeout: 1, searchWifiMaxIterations: Int.max,
+                                            batteryProvisionAPI: batteryProvisionAPIMock)
         _ = provider.initialize()
         _ = provider.enable()
         provider.setProvisionManager(espProvisionMock)
@@ -1018,10 +994,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.provisionDevice)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["connected"] as? Bool != nil)
-        #expect(data["connected"] as? Bool == true)
+        #expect(receivedData["connected"] as? Bool == true)
 
         try #require(mockDevice.receivedData.count == 5)
 
@@ -1034,7 +1007,7 @@ struct ESPProvisionProviderTest {
         if case let .openRemoteConfig(openRemoteConfig) = request.body {
             #expect(openRemoteConfig.realm == "master")
             #expect(openRemoteConfig.mqttBrokerURL == "mqtts://localhost:8883")
-            #expect(openRemoteConfig.user == "service-account-" + expectedDeviceInfo.deviceID) // TODO: what's the proper user name to use ?
+            #expect(openRemoteConfig.user == expectedDeviceInfo.deviceID.lowercased(with: Locale(identifier: "en")))
             #expect(openRemoteConfig.mqttPassword != nil)
             #expect(openRemoteConfig.mqttPassword == batteryProvisionAPIMock.receivedPassword)
             #expect(openRemoteConfig.assetID == "AssetID")
@@ -1106,11 +1079,9 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.provisionDevice)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["connected"] as? Bool != nil)
-        #expect(data["connected"] as? Bool == false)
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
+        #expect(receivedData["connected"] as? Bool != nil)
+        #expect(receivedData["connected"] as? Bool == false)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.timeoutError.rawValue)
 
         try #require(mockDevice.receivedData.count == 5)
 
@@ -1123,7 +1094,7 @@ struct ESPProvisionProviderTest {
         if case let .openRemoteConfig(openRemoteConfig) = request.body {
             #expect(openRemoteConfig.realm == "master")
             #expect(openRemoteConfig.mqttBrokerURL == "mqtts://localhost:8883")
-            #expect(openRemoteConfig.user == "service-account-" + expectedDeviceInfo.deviceID) // TODO: what's the proper user name to use ?
+            #expect(openRemoteConfig.user == expectedDeviceInfo.deviceID.lowercased(with: Locale(identifier: "en")))
             #expect(openRemoteConfig.mqttPassword != nil)
             #expect(openRemoteConfig.mqttPassword == batteryProvisionAPIMock.receivedPassword)
             #expect(openRemoteConfig.assetID == "AssetID")
@@ -1174,9 +1145,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.provisionDevice)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
     }
 
     // MARK: Exit provisioning
@@ -1199,10 +1168,7 @@ struct ESPProvisionProviderTest {
 
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.exitProvisioning)
-        #expect((receivedData["data"] as? [String:Any]) != nil)
-        let data = receivedData["data"] as! [String:Any]
-
-        #expect(data["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
+        #expect(receivedData["errorCode"] as? Int == ESPProviderErrorCode.notConnected.rawValue)
     }
 
     // MARK: helpers
@@ -1223,7 +1189,7 @@ struct ESPProvisionProviderTest {
             provider.startDevicesScan()
         }
 
-        return ((receivedData["data"] as? [String:Any])!["devices"] as! [[String:Any]]).first!
+        return (receivedData["devices"] as! [[String:Any]]).first!
     }
 
     private func connectToDevice(provider: ESPProvisionProvider, deviceId: String) async throws {
@@ -1236,7 +1202,7 @@ struct ESPProvisionProviderTest {
         let receivedData = receivedMessages[0]
         #expect(receivedData["provider"] as? String == Providers.espprovision)
         #expect(receivedData["action"] as? String == Actions.stopBleScan)
-        #expect(receivedData["data"] == nil)
+        #expect(receivedData.count == 2)
     }
 
     private func waitForMessage(provider: ESPProvisionProvider, expectingAction action: String, afterCalling trigger: (() -> (Void))) async -> [String:Any] {

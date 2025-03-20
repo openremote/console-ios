@@ -48,28 +48,37 @@ struct BatteryProvisionAPIREST: BatteryProvisionAPI {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         do {
-            request.httpBody = try JSONEncoder().encode(ProvisionBody(deviceId: deviceId, password: password))
+            request.httpBody = try JSONEncoder().encode(ProvisionRequestBody(deviceId: deviceId, password: password))
+            print("Request body \(String(data: request.httpBody!, encoding: .utf8) ?? "nil")")
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let response = response as? HTTPURLResponse,
-                  (200...299).contains(response.statusCode) else {
-                print ("server error")
-                return "assetId" // TODO throw
+            guard let response = response as? HTTPURLResponse else {
+                print("Not an HTTP response ?!?")
+                return "ERROR"
+            }
+            guard (200...299).contains(response.statusCode) else {
+                print ("server error, status code \(response.statusCode)")
+                return "ERROR" // TODO throw
             }
             if let mimeType = response.mimeType,
                mimeType == "application/json",
                let dataString = String(data: data, encoding: .utf8) {
                 print ("got data: \(dataString)")
-                return "assetId" // TODO
+                let assetId = try JSONDecoder().decode(ProvisionResponseBody.self, from: data).assetId
+                return assetId
             }
         } catch {
             print(error.localizedDescription)
-            return "assetId" // TODO throw
+            return "ERROR" // TODO throw
         }
-        return "assetId" // TODO how can I get here ?
+        return "ERROR" // TODO how can I get here ?
     }
 
-    struct ProvisionBody: Codable {
+    struct ProvisionRequestBody: Encodable {
         var deviceId: String
         var password: String
+    }
+
+    struct ProvisionResponseBody: Decodable {
+        var assetId: String
     }
 }

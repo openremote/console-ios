@@ -47,9 +47,11 @@ class ESPProvisionProvider: NSObject {
 
     private var wifiProvisioner: WifiProvisioner?
 
+    private var apiURL = URL(string: "http://localhost:8080/api/master")!
+
     typealias BatteryProvisionFactory = () -> BatteryProvision
     private lazy var batteryProvisionFactory: BatteryProvisionFactory = {
-        BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel)
+        BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel, apiURL: self.apiURL)
     }
 
     private var callbackChannel: CallbackChannel?
@@ -214,7 +216,8 @@ class ESPProvisionProvider: NSObject {
 extension ESPProvisionProvider {
     public convenience init(searchDeviceTimeout: TimeInterval = 120, searchDeviceMaxIterations: Int = 25,
                             searchWifiTimeout: TimeInterval = 120, searchWifiMaxIterations: Int = 25,
-                            batteryProvisionAPI: BatteryProvisionAPI? = nil, backendConnectionTimeout: TimeInterval? = nil) {
+                            batteryProvisionAPI: BatteryProvisionAPI? = nil, backendConnectionTimeout: TimeInterval? = nil,
+                            apiURL: URL = URL(string:"http://localhost:8080/api/master")!) {
         self.init()
         self.searchDeviceTimeout = searchDeviceTimeout
         self.searchDeviceMaxIterations = searchDeviceMaxIterations
@@ -225,7 +228,7 @@ extension ESPProvisionProvider {
         self.searchWifiMaxIterations = searchWifiMaxIterations
 
         self.batteryProvisionFactory = {
-            let batteryProvision = BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel)
+            let batteryProvision = BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel, apiURL: apiURL)
             if let batteryProvisionAPI {
                 batteryProvision.batteryProvisionAPI = batteryProvisionAPI
             }

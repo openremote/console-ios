@@ -27,8 +27,6 @@ protocol BatteryProvisionAPI {
 }
 
 class BatteryProvision {
-    private static let serviceAccountPrefix = "service-account-"
-
     private static let logger = Logger(
            subsystem: Bundle.main.bundleIdentifier!,
            category: String(describing: ESPProvisionProvider.self)
@@ -37,14 +35,15 @@ class BatteryProvision {
     private var deviceConnection: DeviceConnection?
     var callbackChannel: CallbackChannel?
 
-    var apiURL = URL("http://localhost:8080/api/master")!
+    var apiURL: URL
     var batteryProvisionAPI: BatteryProvisionAPI
 
     var backendConnectionTimeout: TimeInterval = 60
 
-    init (deviceConnection: DeviceConnection?, callbackChannel: CallbackChannel?) {
+    init (deviceConnection: DeviceConnection?, callbackChannel: CallbackChannel?, apiURL: URL) {
         self.deviceConnection = deviceConnection
         self.callbackChannel = callbackChannel
+        self.apiURL = apiURL
         self.batteryProvisionAPI = BatteryProvisionAPIREST(apiURL: apiURL)
     }
 
@@ -60,7 +59,7 @@ class BatteryProvision {
             let password = try generatePassword()
 
             let assetId = try await batteryProvisionAPI.provision(deviceId: deviceInfo.deviceId, password: password, token: userToken)
-            let userName = "\(BatteryProvision.serviceAccountPrefix)\(deviceInfo.deviceId)"
+            let userName = deviceInfo.deviceId.lowercased(with: Locale(identifier: "en"))
 
             try await deviceConnection!.sendOpenRemoteConfig(mqttBrokerUrl: mqttURL, mqttUser: userName, mqttPassword: password, assetId: assetId)
 
@@ -105,7 +104,7 @@ class BatteryProvision {
 
     private var mqttURL: String {
         // TODO: is this OK or do we want to get the mqtt url from the server
-        // mqtts://staging.mygrid.openremote.app:8883
+
         return "mqtts://\(apiURL.host ?? "localhost"):8883"
     }
 }

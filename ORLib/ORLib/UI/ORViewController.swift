@@ -388,7 +388,12 @@ extension ORViewcontroller: WKScriptMessageHandler {
                             case Providers.espprovision:
                                 switch(action) {
                                 case Actions.providerInit:
-                                    espProvisionProvider = ESPProvisionProvider()
+                                    if let baseUrl, let appUrl = URL(string: baseUrl),
+                                       let apiUrl = URL(string: "\(appUrl.scheme ?? "https")://\(appUrl.host ?? "localhost")\(appUrl.port != nil ? ":\(appUrl.port!)" : "")/api/master") {
+                                        espProvisionProvider = ESPProvisionProvider(apiURL: apiUrl)
+                                    } else {
+                                        espProvisionProvider = ESPProvisionProvider()
+                                    }
                                     espProvisionProvider?.sendDataCallback = { [weak self] data in
                                         self?.sendData(data: data)
                                     }

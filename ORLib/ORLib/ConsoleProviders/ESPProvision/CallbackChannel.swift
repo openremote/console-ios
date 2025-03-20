@@ -37,7 +37,9 @@ struct CallbackChannel {
             DefaultsKey.providerKey: provider,
             DefaultsKey.actionKey: action]
         if let data {
-            payload[DefaultsKey.dataKey] = data
+            payload.merge(data) { current, _ in
+                current
+            }
         }
         self.sendDataCallback(payload)
     }
