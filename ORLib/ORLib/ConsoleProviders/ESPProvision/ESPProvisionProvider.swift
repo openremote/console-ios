@@ -49,6 +49,9 @@ class ESPProvisionProvider: NSObject {
 
     private var apiURL = URL(string: "http://localhost:8080/api/master")!
 
+
+    private var manager: CBCentralManager?
+
     typealias BatteryProvisionFactory = () -> BatteryProvision
     private lazy var batteryProvisionFactory: BatteryProvisionFactory = {
         BatteryProvision(deviceConnection: self.deviceConnection, callbackChannel: self.callbackChannel, apiURL: self.apiURL)
@@ -89,6 +92,13 @@ class ESPProvisionProvider: NSObject {
 
     public func enable() -> [String: Any] {
         deviceRegistry.enable()
+
+        // This will trigger the iOS pop-up to provide authorization to use BLE
+        // This is required otherwise permissionKey returned to the web app is always false
+        manager = CBCentralManager()
+        manager?.scanForPeripherals(withServices: [CBUUID(string: "0x180F")])
+        manager?.stopScan()
+        // Don't set manager to nil here as then it does not request permissions
 
         userdefaults?.removeObject(forKey: ESPProvisionProvider.espProvisionDisabledKey)
         userdefaults?.synchronize()
