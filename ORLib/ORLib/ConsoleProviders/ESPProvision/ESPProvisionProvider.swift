@@ -74,6 +74,11 @@ class ESPProvisionProvider: NSObject {
         super.init()
     }
 
+    public convenience init(apiURL: URL = URL(string:"http://localhost:8080/api/master")!) {
+        self.init()
+        self.apiURL = apiURL
+    }
+
     // MARK: Standard provider lifecycle
 
     public func initialize() -> [String: Any] {
