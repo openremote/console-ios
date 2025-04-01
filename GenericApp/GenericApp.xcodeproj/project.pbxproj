@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,6 +28,7 @@
 		910893A2285DB37C00D4ABA7 /* WizardDomainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910893A1285DB37C00D4ABA7 /* WizardDomainViewController.swift */; };
 		91543FDE293FA2F20009016E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91543FDD293FA2F20009016E /* SettingsViewController.swift */; };
 		915BFDFC29685A7200A4FD67 /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915BFDFB29685A7200A4FD67 /* ProjectTableViewCell.swift */; };
+		915C6F702D9BD07000D495BD /* ORLib in Frameworks */ = {isa = PBXBuildFile; productRef = 915C6F6F2D9BD07000D495BD /* ORLib */; };
 		91658F952889C15D000FF05C /* WizardRealmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91658F942889C15D000FF05C /* WizardRealmViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +90,7 @@
 				4C4B11CD2D787829005E733F /* FirebaseMessaging in Frameworks */,
 				4C4B11B62D786665005E733F /* ORLib in Frameworks */,
 				4C4B11C92D786B16005E733F /* DropDown in Frameworks */,
+				915C6F702D9BD07000D495BD /* ORLib in Frameworks */,
 				4C4B11CB2D787829005E733F /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,10 +256,10 @@
 			);
 			mainGroup = 878D2D00249A490300011484;
 			packageReferences = (
-				4C4B11B42D786665005E733F /* XCLocalSwiftPackageReference "../ORLib" */,
 				4C4B11B72D7866D3005E733F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				4C4B11C22D78670C005E733F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				4C4B11C72D786B16005E733F /* XCRemoteSwiftPackageReference "DropDown" */,
+				915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "ORLib" */,
 			);
 			productRefGroup = 878D2D0A249A490300011484 /* Products */;
 			projectDirPath = "";
@@ -621,13 +623,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		4C4B11B42D786665005E733F /* XCLocalSwiftPackageReference "../ORLib" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../ORLib;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		4C4B11B72D7866D3005E733F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -651,6 +646,14 @@
 			requirement = {
 				branch = master;
 				kind = branch;
+			};
+		};
+		915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "ORLib" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/openremote/ORLib.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -688,6 +691,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4C4B11B72D7866D3005E733F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		915C6F6F2D9BD07000D495BD /* ORLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "ORLib" */;
+			productName = ORLib;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
