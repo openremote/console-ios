@@ -513,25 +513,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 4AC88KZHJZ;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
-					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
-					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
-					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/FirebaseAnalytics\"",
-					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Popover\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/MaterialComponents\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = NotificationService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -556,25 +538,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 4AC88KZHJZ;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreDiagnostics\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstanceID\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb\"",
-					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
-					"\"${PODS_ROOT}/GoogleAppMeasurement/Frameworks\"",
-					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/FirebaseAnalytics\"",
-					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleAppMeasurement\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Popover\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/MaterialComponents\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = NotificationService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
