@@ -259,7 +259,7 @@
 				4C4B11B72D7866D3005E733F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				4C4B11C22D78670C005E733F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				4C4B11C72D786B16005E733F /* XCRemoteSwiftPackageReference "DropDown" */,
-				915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "ORLib" */,
+				915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "console-ios-lib" */,
 			);
 			productRefGroup = 878D2D0A249A490300011484 /* Products */;
 			projectDirPath = "";
@@ -612,9 +612,9 @@
 				kind = branch;
 			};
 		};
-		915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "ORLib" */ = {
+		915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "console-ios-lib" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/openremote/ORLib.git";
+			repositoryURL = "https://github.com/openremote/console-ios-lib.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.4.0;
@@ -658,7 +658,7 @@
 		};
 		915C6F6F2D9BD07000D495BD /* ORLib */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "ORLib" */;
+			package = 915C6F6E2D9BD07000D495BD /* XCRemoteSwiftPackageReference "console-ios-lib" */;
 			productName = ORLib;
 		};
 /* End XCSwiftPackageProductDependency section */
