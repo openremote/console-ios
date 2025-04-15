@@ -102,18 +102,18 @@ extension WizardDomainViewController: UITextFieldDelegate {
     }
 
     fileprivate func requestAppConfig(_ domain: String) {
-        configManager = ConfigManager(apiManagerFactory: { url in
-            HttpApiManager(baseUrl: url)
-        })
-
         async {
             do {
+                configManager = ConfigManager(apiManagerFactory: { url in
+                    try HttpApiManager(baseUrl: url)
+                })
+
                 let state = try await configManager!.setDomain(domain: domain)
                 print("State \(state)")
                 switch state {
                 case .selectDomain:
                     // Something wrong, we just set the domain
-                    let alertView = UIAlertController(title: "Error", message: "Error occurred getting app config. Check your input and try again", preferredStyle: .alert)
+                    let alertView = UIAlertController(title: "Error", message: "Error occurred getting app config.\nCheck your input and try again.", preferredStyle: .alert)
                     alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 
                     self.present(alertView, animated: true, completion: nil)
@@ -124,8 +124,12 @@ extension WizardDomainViewController: UITextFieldDelegate {
                 case.complete:
                     self.performSegue(withIdentifier: Segues.goToWebView, sender: self)
                 }
+            } catch ApiManagerError.invalidUrl {
+                let alertView = UIAlertController(title: "Error", message: "Invalid domain.\nCheck your input and try again.", preferredStyle: .alert)
+                alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alertView, animated: true, completion: nil)
             } catch {
-                let alertView = UIAlertController(title: "Error", message: "Error occurred getting app config. Check your input and try again", preferredStyle: .alert)
+                let alertView = UIAlertController(title: "Error", message: "Error occurred getting app config.\nCheck your input and try again.", preferredStyle: .alert)
                 alertView.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alertView, animated: true, completion: nil)
             }
